@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.suimu.system.mapper.NavClRelMapper">
+    
+    <resultMap type="NavClRel" id="NavClRelResult">
+        <result property="linkId"    column="link_id"    />
+        <result property="classifyId"    column="classify_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <resultMap type="NavClassify" id="NavClassifyResult">
+        <result property="id"    column="id"    />
+        <result property="label"    column="label"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="type"    column="type"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <select id="selectClassifys" parameterType="NavClRel" resultMap="NavClassifyResult">
+        select id, label, parent_id, type, sort from nav_classify c where type = '1'
+        and id in (
+        select classify_id from nav_cl_rel rel
+        <where>
+            link_id = #{linkId}
+        </where>
+        )
+    </select>
+
+    <select id="selectTags" parameterType="NavClRel" resultMap="NavClassifyResult">
+        select id, label, parent_id, type, sort from nav_classify c where type = '2'
+        and id in (
+        select classify_id from nav_cl_rel rel
+        <where>
+            link_id = #{linkId}
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+        )
+    </select>
+
+
+
+    <sql id="selectNavClRelVo">
+        select link_id, classify_id, user_id from nav_cl_rel
+    </sql>
+
+
+
+    <select id="selectNavClRelList" parameterType="NavClRel" resultMap="NavClRelResult">
+        <include refid="selectNavClRelVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNavClRelByLinkId" parameterType="Long" resultMap="NavClRelResult">
+        <include refid="selectNavClRelVo"/>
+        where link_id = #{linkId}
+    </select>
+        
+    <insert id="insertNavClRel" parameterType="NavClRel">
+        insert into nav_cl_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="linkId != null">link_id,</if>
+            <if test="classifyId != null">classify_id,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="linkId != null">#{linkId},</if>
+            <if test="classifyId != null">#{classifyId},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNavClRel" parameterType="NavClRel">
+        update nav_cl_rel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classifyId != null">classify_id = #{classifyId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where link_id = #{linkId}
+    </update>
+
+    <delete id="deleteNavClRelByLinkId" parameterType="Long">
+        delete from nav_cl_rel where link_id = #{linkId}
+    </delete>
+
+    <delete id="deleteNavClRelByLinkIds" parameterType="String">
+        delete from nav_cl_rel where link_id in 
+        <foreach item="linkId" collection="array" open="(" separator="," close=")">
+            #{linkId}
+        </foreach>
+    </delete>
+</mapper>

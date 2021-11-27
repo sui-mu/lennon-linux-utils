@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.suimu.system.mapper.NavHistoryMapper">
+    
+    <resultMap type="NavHistory" id="NavHistoryResult">
+        <result property="id"    column="id"    />
+        <result property="linkId"    column="link_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectNavHistoryVo">
+        select id, link_id, user_id, type from nav_history
+    </sql>
+
+    <select id="selectNavHistoryList" parameterType="NavHistory" resultMap="NavHistoryResult">
+        <include refid="selectNavHistoryVo"/>
+        <where>  
+            <if test="linkId != null "> and link_id = #{linkId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectNavHistoryById" parameterType="String" resultMap="NavHistoryResult">
+        <include refid="selectNavHistoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNavHistory" parameterType="NavHistory">
+        insert into nav_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="linkId != null">link_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="linkId != null">#{linkId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNavHistory" parameterType="NavHistory">
+        update nav_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="linkId != null">link_id = #{linkId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNavHistoryById" parameterType="String">
+        delete from nav_history where id = #{id}
+    </delete>
+
+    <delete id="deleteNavHistoryByIds" parameterType="String">
+        delete from nav_history where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

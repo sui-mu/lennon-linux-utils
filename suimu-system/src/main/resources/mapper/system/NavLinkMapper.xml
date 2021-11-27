@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.suimu.system.mapper.NavLinkMapper">
+
+    <resultMap type="NavLink" id="NavLinkResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="intro"    column="intro"    />
+        <result property="icon"    column="icon"    />
+        <result property="linkUrl"    column="link_url"    />
+        <result property="remark"    column="remark"    />
+        <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap type="NavLink" id="NavLinkResultInfo">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="intro"    column="intro"    />
+        <result property="icon"    column="icon"    />
+        <result property="linkUrl"    column="link_url"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
+        <collection property="classifies" column="{linkId=id}" select="site.suimu.system.mapper.NavClRelMapper.selectClassifys" />
+        <collection property="tags" column="{linkId=id}" select="site.suimu.system.mapper.NavClRelMapper.selectTags" />
+    </resultMap>
+
+
+
+    <sql id="selectNavLinkVo">
+        select id, name, intro, icon, link_url, create_by, create_time, update_by, update_time, remark, sort, status from nav_link
+    </sql>
+
+    <select id="selectNavLinkList" parameterType="NavLink" resultMap="NavLinkResult">
+        <include refid="selectNavLinkVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="intro != null  and intro != ''"> and intro = #{intro}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
+            <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by sort, name, intro
+    </select>
+
+    <select id="selectNavLinkById" parameterType="Long" resultMap="NavLinkResultInfo">
+        <include refid="selectNavLinkVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNavLink" parameterType="NavLink" useGeneratedKeys="true" keyProperty="id">
+        insert into nav_link
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="intro != null and intro != ''">intro,</if>
+            <if test="icon != null">icon,</if>
+            <if test="linkUrl != null and linkUrl != ''">link_url,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="sort != null">sort,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="intro != null and intro != ''">#{intro},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="linkUrl != null and linkUrl != ''">#{linkUrl},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNavLink" parameterType="NavLink">
+        update nav_link
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="intro != null and intro != ''">intro = #{intro},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="linkUrl != null and linkUrl != ''">link_url = #{linkUrl},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNavLinkById" parameterType="Long">
+        delete from nav_link where id = #{id}
+    </delete>
+
+    <delete id="deleteNavLinkByIds" parameterType="String">
+        delete from nav_link where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
