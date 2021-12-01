@@ -16,10 +16,11 @@
         <result property="updateTime"    column="update_time"    />
         <result property="share"    column="share"    />
         <result property="ancestors"    column="ancestors"    />
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <sql id="selectNavClassifyVo">
-        select id, label, parent_id, type, sort, create_by, create_time, update_by, update_time, share, ancestors from nav_classify
+        select id, label, parent_id, type, sort, create_by, create_time, update_by, update_time, share, ancestors, dept_id from nav_classify
     </sql>
 
     <select id="selectNavClassifyList" parameterType="NavClassify" resultMap="NavClassifyResult">
@@ -31,6 +32,7 @@
             <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
             <if test="share != null  and share != ''"> and share = #{share}</if>
             <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
         </where>
     </select>
 
@@ -52,6 +54,7 @@
             <if test="updateTime != null">update_time,</if>
             <if test="share != null">share,</if>
             <if test="ancestors != null">ancestors,</if>
+            <if test="deptId != null">dept_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="label != null and label != ''">#{label},</if>
@@ -64,6 +67,7 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="share != null">#{share},</if>
             <if test="ancestors != null">#{ancestors},</if>
+            <if test="deptId != null">#{deptId},</if>
         </trim>
     </insert>
 
@@ -80,6 +84,7 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="share != null">share = #{share},</if>
             <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
         </trim>
         where id = #{id}
     </update>

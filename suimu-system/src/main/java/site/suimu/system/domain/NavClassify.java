@@ -9,7 +9,7 @@ import site.suimu.common.core.domain.TreeEntity;
  * 分类对象 nav_classify
  *
  * @author ruoyi
- * @date 2021-11-27
+ * @date 2021-12-01
  */
 public class NavClassify extends TreeEntity
 {
@@ -33,6 +33,10 @@ public class NavClassify extends TreeEntity
     /** 是否公开 */
     @Excel(name = "是否公开")
     private String share;
+
+    /** 部门ID */
+    @Excel(name = "部门ID")
+    private Long deptId;
 
     public void setId(Long id)
     {
@@ -79,6 +83,15 @@ public class NavClassify extends TreeEntity
     {
         return share;
     }
+    public void setDeptId(Long deptId)
+    {
+        this.deptId = deptId;
+    }
+
+    public Long getDeptId()
+    {
+        return deptId;
+    }
 
     @Override
     public String toString() {
@@ -93,6 +106,8 @@ public class NavClassify extends TreeEntity
                 .append("updateBy", getUpdateBy())
                 .append("updateTime", getUpdateTime())
                 .append("share", getShare())
+                .append("ancestors", getAncestors())
+                .append("deptId", getDeptId())
                 .toString();
     }
 }

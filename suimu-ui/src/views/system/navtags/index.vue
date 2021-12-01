@@ -29,6 +29,9 @@
         </template>
       </el-table-column>
       <el-table-column label="排序" align="center" prop="sort" />
+      <el-table-column label="是否公开" align="center" prop="share" />
+      <el-table-column label="祖籍" align="center" prop="ancestors" />
+      <el-table-column label="部门ID" align="center" prop="deptId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:navclassify:edit']">修改</el-button>
@@ -99,7 +102,7 @@ export default {
       queryParams: {
         label: null,
         parentId: null,
-        type: "1",
+        type: "2",
         sort: null,
         share: null,
         ancestors: null,
