@@ -24,7 +24,8 @@
     </sql>
 
     <select id="selectNavClassifyList" parameterType="NavClassify" resultMap="NavClassifyResult">
-        <include refid="selectNavClassifyVo"/>
+        select nc.id, nc.label, nc.parent_id, nc.type, nc.sort, nc.create_by, nc.create_time, nc.update_by, nc.update_time, nc.share, nc.ancestors, nc.dept_id from nav_classify nc
+        left join sys_user u on u.user_id = nc.create_by
         <where>
             <if test="label != null  and label != ''"> and label = #{label}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
@@ -33,6 +34,8 @@
             <if test="share != null  and share != ''"> and share = #{share}</if>
             <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
             <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 

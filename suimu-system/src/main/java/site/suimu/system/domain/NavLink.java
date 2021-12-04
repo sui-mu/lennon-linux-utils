@@ -45,6 +45,10 @@ public class NavLink extends BaseEntity
     @Excel(name = "链接状态")
     private String status;
 
+    /** 部门编码 */
+    @Excel(name = "部门编码")
+    private Long deptId;
+
     private List<NavClassify> classifies = new ArrayList<>();
 
     private List<NavClassify> tags = new ArrayList<>();
@@ -111,6 +115,14 @@ public class NavLink extends BaseEntity
     public String getStatus()
     {
         return status;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
     public List<NavClassify> getClassifies() {

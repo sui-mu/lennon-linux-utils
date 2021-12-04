@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import site.suimu.common.annotation.DataScope;
 import site.suimu.common.utils.DateUtils;
 import site.suimu.common.utils.SecurityUtils;
 import site.suimu.common.utils.StringUtils;
@@ -42,6 +43,7 @@ public class NavClassifyServiceImpl implements INavClassifyService {
      * @return 分类
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<NavClassify> selectNavClassifyList(NavClassify navClassify) {
         return navClassifyMapper.selectNavClassifyList(navClassify);
     }
@@ -91,8 +93,10 @@ public class NavClassifyServiceImpl implements INavClassifyService {
     @Override
     public int insertNavClassify(NavClassify navClassify) {
         Long userId = SecurityUtils.getUserId();
+        Long deptId = SecurityUtils.getDeptId();
         navClassify.setCreateBy(String.valueOf(userId));
         navClassify.setCreateTime(DateUtils.getNowDate());
+        navClassify.setDeptId(deptId);
         return navClassifyMapper.insertNavClassify(navClassify);
     }
 

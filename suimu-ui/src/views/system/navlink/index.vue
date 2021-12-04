@@ -43,11 +43,13 @@
     <el-table v-loading="loading" :data="navlinkList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编码" align="center" prop="id" />
-      <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="简介" align="center" prop="intro" />
       <el-table-column label="图标" align="center" prop="icon" />
-      <el-table-column label="链接" align="center" prop="linkUrl" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="名称" align="center" prop="name">
+        <template slot-scope="scope">
+          <el-link :href="scope.row.linkUrl" type="primary" target="_blank">{{scope.row.name}}</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="简介" align="center" prop="intro" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="链接状态" align="center" prop="status">
         <template slot-scope="scope">
@@ -80,12 +82,18 @@
           <el-input v-model="form.linkUrl" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="链接标签" prop="linkUrl">
-          <el-tag :key="index" v-for="(tag,index) in form.tags" closable :disable-transitions="false" @close="handleTagRemove(tag)">
-            {{tag.label}}
-          </el-tag>
+          <div>
+            <el-tag :key="index" v-for="(tag,index) in form.tags" closable :disable-transitions="false" @close="handleTagRemove(tag)">
+              {{tag.label}}
+            </el-tag>
+            <el-button class="button-new-tag" size="mini" @click="handleTagAdd">+ 添加</el-button>
+          </div>
         </el-form-item>
         <el-form-item label="链接分类" prop="linkUrl">
-          <el-input v-model="form.linkUrl" type="textarea" placeholder="请输入内容" />
+          <el-tag :key="index" v-for="(classify,index) in form.classifies" closable :disable-transitions="false" @close="handleClassifyRemove(classify)">
+            {{classify.label}}
+          </el-tag>
+          <el-button class="button-new-tag" size="mini" @click="handleTagAdd">+ 添加</el-button>
         </el-form-item>
         <el-form-item label="链接状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择链接状态">
@@ -280,7 +288,21 @@ export default {
     handleTagRemove(tag) {
       console.log(tag)
       this.form.tags.splice(this.form.tags.indexOf(tag), 1);
+    },
+    handleTagAdd() {
+
+    },
+    handleClassifyRemove() {
+
+    },
+    handleClassifyAdd() {
+
     }
   }
 };
 </script>
+<style scoped>
+  .button-new-tag {
+    margin-left: 10px;
+  }
+</style>

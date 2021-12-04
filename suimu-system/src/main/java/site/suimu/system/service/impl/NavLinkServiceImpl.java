@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import site.suimu.common.annotation.DataScope;
 import site.suimu.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,7 @@ public class NavLinkServiceImpl implements INavLinkService {
      * @return 链接
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<NavLink> selectNavLinkList(NavLink navLink) {
         return navLinkMapper.selectNavLinkList(navLink);
     }
@@ -56,14 +58,18 @@ public class NavLinkServiceImpl implements INavLinkService {
      */
     @Override
     public int insertNavLink(NavLink navLink) {
+        Long deptId;
         Long userId;
         try {
             userId = SecurityUtils.getUserId();
+            deptId = SecurityUtils.getDeptId();
         } catch (Exception e) {
             userId = 0L;
+            deptId = 0L;
         }
         navLink.setCreateBy(String.valueOf(userId));
         navLink.setCreateTime(DateUtils.getNowDate());
+        navLink.setDeptId(deptId);
         return navLinkMapper.insertNavLink(navLink);
     }
 

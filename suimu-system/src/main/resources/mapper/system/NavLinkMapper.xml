@@ -13,6 +13,7 @@
         <result property="remark"    column="remark"    />
         <result property="sort"    column="sort"    />
         <result property="status"    column="status"    />
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <resultMap type="NavLink" id="NavLinkResultInfo">
@@ -35,11 +36,12 @@
 
 
     <sql id="selectNavLinkVo">
-        select id, name, intro, icon, link_url, create_by, create_time, update_by, update_time, remark, sort, status from nav_link
+        select id, name, intro, icon, link_url, create_by, create_time, update_by, update_time, remark, sort, status , dept_id from nav_link
     </sql>
 
     <select id="selectNavLinkList" parameterType="NavLink" resultMap="NavLinkResult">
-        <include refid="selectNavLinkVo"/>
+        select nl.id, nl.name, nl.intro, nl.icon, nl.link_url, nl.create_by, nl.create_time, nl.update_by, nl.update_time, nl.remark, nl.sort, nl.status ,nl.dept_id from nav_link nl
+        left join sys_user u on u.user_id = nl.create_by
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="intro != null  and intro != ''"> and intro = #{intro}</if>
@@ -47,6 +49,8 @@
             <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
             <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
         order by sort, name, intro
     </select>
@@ -70,6 +74,7 @@
             <if test="remark != null">remark,</if>
             <if test="sort != null">sort,</if>
             <if test="status != null">status,</if>
+            <if test="deptId != null">dept_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
@@ -83,6 +88,7 @@
             <if test="remark != null">#{remark},</if>
             <if test="sort != null">#{sort},</if>
             <if test="status != null">#{status},</if>
+            <if test="deptId != null">#{deptId},</if>
         </trim>
     </insert>
 
@@ -100,6 +106,7 @@
             <if test="remark != null">remark = #{remark},</if>
             <if test="sort != null">sort = #{sort},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
         </trim>
         where id = #{id}
     </update>
