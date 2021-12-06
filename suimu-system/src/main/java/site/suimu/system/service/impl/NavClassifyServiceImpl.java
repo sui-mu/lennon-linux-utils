@@ -68,8 +68,9 @@ public class NavClassifyServiceImpl implements INavClassifyService {
     private void findChilds(List<NavClassify> origins, NavClassify current) {
         List<NavClassify> childs = new ArrayList<>();
         for (NavClassify item : origins) {
-            if (StringUtils.isNull(current.getAncestors())) {
+            if (StringUtils.isEmpty(current.getAncestors())) {
                 current.setAncestors(current.getParentId().toString());
+                updateNavClassify(item);
             }
             if (current.getId().equals(item.getParentId())) {
                 // 处理祖宗辈
@@ -99,6 +100,8 @@ public class NavClassifyServiceImpl implements INavClassifyService {
         navClassify.setDeptId(deptId);
         return navClassifyMapper.insertNavClassify(navClassify);
     }
+
+
 
     /**
      * 修改分类
