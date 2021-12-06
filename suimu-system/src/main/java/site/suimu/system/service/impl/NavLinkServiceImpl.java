@@ -9,8 +9,12 @@ import site.suimu.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import site.suimu.common.utils.SecurityUtils;
+import site.suimu.common.utils.StringUtils;
+import site.suimu.system.domain.NavClRel;
+import site.suimu.system.domain.NavClassify;
 import site.suimu.system.mapper.NavLinkMapper;
 import site.suimu.system.domain.NavLink;
+import site.suimu.system.service.INavClRelService;
 import site.suimu.system.service.INavLinkService;
 
 /**
@@ -26,6 +30,9 @@ public class NavLinkServiceImpl implements INavLinkService {
 
     @Autowired
     private NavLinkMapper navLinkMapper;
+
+    @Autowired
+    private INavClRelService iNavClRelService;
 
     /**
      * 查询链接
@@ -70,8 +77,35 @@ public class NavLinkServiceImpl implements INavLinkService {
         navLink.setCreateBy(String.valueOf(userId));
         navLink.setCreateTime(DateUtils.getNowDate());
         navLink.setDeptId(deptId);
+        handleReLation(navLink);
         return navLinkMapper.insertNavLink(navLink);
     }
+
+    private void handleReLation(NavLink navLink) {
+        iNavClRelService.deleteNavClRelByLinkId(navLink.getId());
+        if (StringUtils.isNotEmpty(navLink.getClassifies())) {
+            for (NavClassify classify : navLink.getClassifies()) {
+                Long classifyId = classify.getId();
+                NavClRel navClRel = new NavClRel();
+                navClRel.setClassifyId(classifyId);
+                navClRel.setLinkId(navLink.getId());
+                navClRel.setUserId(Long.parseLong(navLink.getCreateBy()));
+                iNavClRelService.insertNavClRel(navClRel);
+            }
+        }
+        if (StringUtils.isNotEmpty(navLink.getTags())) {
+            for (NavClassify classify : navLink.getTags()) {
+                Long classifyId = classify.getId();
+                NavClRel navClRel = new NavClRel();
+                navClRel.setClassifyId(classifyId);
+                navClRel.setLinkId(navLink.getId());
+                navClRel.setUserId(Long.parseLong(navLink.getCreateBy()));
+                iNavClRelService.insertNavClRel(navClRel);
+            }
+        }
+    }
+
+
 
     /**
      * 修改链接
@@ -89,6 +123,7 @@ public class NavLinkServiceImpl implements INavLinkService {
         }
         navLink.setUpdateBy(String.valueOf(userId));
         navLink.setUpdateTime(DateUtils.getNowDate());
+        handleReLation(navLink);
         return navLinkMapper.updateNavLink(navLink);
     }
 

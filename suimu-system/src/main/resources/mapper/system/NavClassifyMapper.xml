@@ -26,6 +26,7 @@
     <select id="selectNavClassifyList" parameterType="NavClassify" resultMap="NavClassifyResult">
         select nc.id, nc.label, nc.parent_id, nc.type, nc.sort, nc.create_by, nc.create_time, nc.update_by, nc.update_time, nc.share, nc.ancestors, nc.dept_id from nav_classify nc
         left join sys_user u on u.user_id = nc.create_by
+        left join sys_dept d on u.dept_id = d.dept_id
         <where>
             <if test="label != null  and label != ''"> and label = #{label}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>

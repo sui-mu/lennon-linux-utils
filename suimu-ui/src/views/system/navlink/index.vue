@@ -81,19 +81,16 @@
         <el-form-item label="链接" prop="linkUrl">
           <el-input v-model="form.linkUrl" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="链接标签" prop="linkUrl">
+        <!-- <el-form-item label="链接标签" prop="linkUrl">
           <div>
             <el-tag :key="index" v-for="(tag,index) in form.tags" closable :disable-transitions="false" @close="handleTagRemove(tag)">
               {{tag.label}}
             </el-tag>
             <el-button class="button-new-tag" size="mini" @click="handleTagAdd">+ 添加</el-button>
           </div>
-        </el-form-item>
-        <el-form-item label="链接分类" prop="linkUrl">
-          <el-tag :key="index" v-for="(classify,index) in form.classifies" closable :disable-transitions="false" @close="handleClassifyRemove(classify)">
-            {{classify.label}}
-          </el-tag>
-          <el-button class="button-new-tag" size="mini" @click="handleTagAdd">+ 添加</el-button>
+        </el-form-item> -->
+        <el-form-item label="分类" prop="classify">
+          <treeselect v-model="form.classify" :options="classifyOptions" :show-count="true" placeholder="请选择分类" />
         </el-form-item>
         <el-form-item label="链接状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择链接状态">
@@ -118,10 +115,14 @@
 
 <script>
 import { listNavlink, getNavlink, delNavlink, addNavlink, updateNavlink } from "@/api/system/navlink";
+import { listNavclassify, treeNavclassify } from "@/api/system/navclassify";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Navlink",
   dicts: ['nav_link_status'],
+  components: { Treeselect },
   data() {
     return {
       // 遮罩层
@@ -138,6 +139,8 @@ export default {
       total: 0,
       // 链接表格数据
       navlinkList: [],
+      // 部门树选项
+      classifyOptions: undefined,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -162,6 +165,9 @@ export default {
         ],
         intro: [
           { required: true, message: "简介不能为空", trigger: "blur" }
+        ],
+        classify: [
+          { required: true, message: "分类不能为空", trigger: "change" }
         ],
         linkUrl: [
           { required: true, message: "链接不能为空", trigger: "blur" }
@@ -192,6 +198,22 @@ export default {
         this.navlinkList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+      this.getTreeselect();
+    },
+    /** 查询分类下拉树结构 */
+    getTreeselect() {
+      let query = {
+        label: null,
+        parentId: null,
+        type: "1",
+        sort: null,
+        share: null,
+        ancestors: null,
+        deptId: null
+      }
+      treeNavclassify(query).then(response => {
+        this.classifyOptions = response.data;
       });
     },
     // 取消按钮
@@ -245,12 +267,16 @@ export default {
       const id = row.id || this.ids
       getNavlink(id).then(response => {
         this.form = response.data;
+        if (this.form.classifies.length > 0) {
+          this.form.classify = this.form.classifies[0].id;
+        }
         this.open = true;
         this.title = "修改链接";
       });
     },
     /** 提交按钮 */
     submitForm() {
+      this.handleFormData();
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
@@ -268,6 +294,14 @@ export default {
           }
         }
       });
+    },
+    handleFormData() {
+      let item = {
+        id: this.form.classify
+      };
+      let arr = [];
+      arr.push(item);
+      this.form.classifies = arr;
     },
     /** 删除按钮操作 */
     handleDelete(row) {

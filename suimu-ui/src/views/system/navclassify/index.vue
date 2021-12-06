@@ -48,7 +48,7 @@
           <treeselect v-model="form.parentId" :options="navclassifyOptions" :normalizer="normalizer" placeholder="请选择父编码" />
         </el-form-item>
         <el-form-item label="类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择类型">
+          <el-select disabled v-model="form.type" placeholder="请选择类型">
             <el-option v-for="dict in dict.type.nav_classify_type" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
           </el-select>
         </el-form-item>
@@ -57,9 +57,6 @@
         </el-form-item>
         <el-form-item label="是否公开" prop="share">
           <el-input v-model="form.share" placeholder="请输入是否公开" />
-        </el-form-item>
-        <el-form-item label="部门ID" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入部门ID" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,9 +112,6 @@ export default {
         parentId: [
           { required: true, message: "父编码不能为空", trigger: "blur" }
         ],
-        type: [
-          { required: true, message: "类型不能为空", trigger: "change" }
-        ],
         sort: [
           { required: true, message: "排序不能为空", trigger: "blur" }
         ],
@@ -167,7 +161,7 @@ export default {
         id: null,
         label: null,
         parentId: null,
-        type: null,
+        type: "1",
         sort: null,
         createBy: null,
         createTime: null,

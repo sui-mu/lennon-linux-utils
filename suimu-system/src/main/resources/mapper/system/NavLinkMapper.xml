@@ -42,6 +42,7 @@
     <select id="selectNavLinkList" parameterType="NavLink" resultMap="NavLinkResult">
         select nl.id, nl.name, nl.intro, nl.icon, nl.link_url, nl.create_by, nl.create_time, nl.update_by, nl.update_time, nl.remark, nl.sort, nl.status ,nl.dept_id from nav_link nl
         left join sys_user u on u.user_id = nl.create_by
+        left join sys_dept d on u.dept_id = d.dept_id
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="intro != null  and intro != ''"> and intro = #{intro}</if>

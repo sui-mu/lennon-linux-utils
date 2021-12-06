@@ -108,7 +108,11 @@ public class NavClassifyServiceImpl implements INavClassifyService {
      */
     @Override
     public int updateNavClassify(NavClassify navClassify) {
+        Long userId = SecurityUtils.getUserId();
+        Long deptId = SecurityUtils.getDeptId();
         navClassify.setUpdateTime(DateUtils.getNowDate());
+        navClassify.setUpdateBy(String.valueOf(userId));
+        navClassify.setDeptId(deptId);
         return navClassifyMapper.updateNavClassify(navClassify);
     }
 
