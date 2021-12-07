@@ -43,7 +43,11 @@
     <el-table v-loading="loading" :data="navlinkList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编码" align="center" prop="id" />
-      <el-table-column label="图标" align="center" prop="icon" />
+      <el-table-column label="图标" align="center" prop="icon">
+        <template slot-scope="scope">
+          <el-image :src="scope.row.icon" fit="none"></el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="名称" align="center" prop="name">
         <template slot-scope="scope">
           <el-link :href="scope.row.linkUrl" type="primary" target="_blank">{{scope.row.name}}</el-link>
@@ -69,6 +73,9 @@
     <!-- 添加或修改链接对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="链接" prop="linkUrl">
+          <el-input v-model="form.linkUrl" type="textarea" @blur="handleURLBlur" placeholder="请输入链接地址" />
+        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
@@ -76,11 +83,13 @@
           <el-input v-model="form.intro" placeholder="请输入简介" />
         </el-form-item>
         <el-form-item label="图标" prop="icon">
-          <el-input v-model="form.icon" placeholder="请输入图标" />
+          <el-input v-model="form.icon" placeholder="请输入图标">
+            <div slot="prepend">
+              <el-image style="width:20px ;height:20px" :src="form.icon"></el-image>
+            </div>
+          </el-input>
         </el-form-item>
-        <el-form-item label="链接" prop="linkUrl">
-          <el-input v-model="form.linkUrl" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+
         <!-- <el-form-item label="链接标签" prop="linkUrl">
           <div>
             <el-tag :key="index" v-for="(tag,index) in form.tags" closable :disable-transitions="false" @close="handleTagRemove(tag)">
@@ -322,6 +331,11 @@ export default {
     handleTagRemove(tag) {
       console.log(tag)
       this.form.tags.splice(this.form.tags.indexOf(tag), 1);
+    },
+    handleURLBlur() {
+      if (this.form.linkUrl) {
+        this.form.icon = this.form.linkUrl.replace(/^(http:\/\/[^\/]+).*$/, '$1') + "/favicon.ico";
+      }
     },
     handleTagAdd() {
 
