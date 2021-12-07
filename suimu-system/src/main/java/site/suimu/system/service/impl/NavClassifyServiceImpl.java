@@ -43,7 +43,6 @@ public class NavClassifyServiceImpl implements INavClassifyService {
      * @return 分类
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "u")
     public List<NavClassify> selectNavClassifyList(NavClassify navClassify) {
         return navClassifyMapper.selectNavClassifyList(navClassify);
     }

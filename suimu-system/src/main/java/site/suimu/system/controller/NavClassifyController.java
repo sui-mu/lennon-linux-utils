@@ -2,6 +2,7 @@ package site.suimu.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,13 @@ import site.suimu.common.utils.poi.ExcelUtil;
 
 /**
  * 分类Controller
- * 
+ *
  * @author ruoyi
  * @date 2021-11-27
  */
 @RestController
 @RequestMapping("/system/navclassify")
-public class NavClassifyController extends BaseController
-{
+public class NavClassifyController extends BaseController {
     @Autowired
     private INavClassifyService navClassifyService;
 
@@ -39,8 +39,13 @@ public class NavClassifyController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:navclassify:list')")
     @GetMapping("/list")
-    public AjaxResult list(NavClassify navClassify)
-    {
+    public AjaxResult list(NavClassify navClassify) {
+        Long userId = SecurityUtils.getUserId();
+        if (userId != 1L) {
+            Long deptId = SecurityUtils.getDeptId();
+            navClassify.setDeptId(deptId);
+            navClassify.setCreateBy(String.valueOf(userId));
+        }
         List<NavClassify> list = navClassifyService.selectNavClassifyList(navClassify);
         return AjaxResult.success(list);
     }
@@ -50,8 +55,13 @@ public class NavClassifyController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:navclassify:list')")
     @GetMapping("/tree")
-    public AjaxResult tree(NavClassify navClassify)
-    {
+    public AjaxResult tree(NavClassify navClassify) {
+        Long userId = SecurityUtils.getUserId();
+        if (userId != 1L) {
+            Long deptId = SecurityUtils.getDeptId();
+            navClassify.setDeptId(deptId);
+            navClassify.setCreateBy(String.valueOf(userId));
+        }
         List<NavClassify> list = navClassifyService.selectNavClassifyTree(navClassify);
         return AjaxResult.success(list);
     }
@@ -62,8 +72,7 @@ public class NavClassifyController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:navclassify:export')")
     @Log(title = "分类", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, NavClassify navClassify)
-    {
+    public void export(HttpServletResponse response, NavClassify navClassify) {
         List<NavClassify> list = navClassifyService.selectNavClassifyList(navClassify);
         ExcelUtil<NavClassify> util = new ExcelUtil<NavClassify>(NavClassify.class);
         util.exportExcel(response, list, "分类数据");
@@ -74,8 +83,7 @@ public class NavClassifyController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:navclassify:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(navClassifyService.selectNavClassifyById(id));
     }
 
@@ -85,8 +93,7 @@ public class NavClassifyController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:navclassify:add')")
     @Log(title = "分类", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody NavClassify navClassify)
-    {
+    public AjaxResult add(@RequestBody NavClassify navClassify) {
         return toAjax(navClassifyService.insertNavClassify(navClassify));
     }
 
@@ -96,8 +103,7 @@ public class NavClassifyController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:navclassify:edit')")
     @Log(title = "分类", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody NavClassify navClassify)
-    {
+    public AjaxResult edit(@RequestBody NavClassify navClassify) {
         Long userId = SecurityUtils.getUserId();
         navClassify.setUpdateBy(String.valueOf(userId));
         return toAjax(navClassifyService.updateNavClassify(navClassify));
@@ -108,9 +114,8 @@ public class NavClassifyController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:navclassify:remove')")
     @Log(title = "分类", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(navClassifyService.deleteNavClassifyByIds(ids));
     }
 }

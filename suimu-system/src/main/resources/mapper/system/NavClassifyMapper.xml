@@ -25,8 +25,6 @@
 
     <select id="selectNavClassifyList" parameterType="NavClassify" resultMap="NavClassifyResult">
         select nc.id, nc.label, nc.parent_id, nc.type, nc.sort, nc.create_by, nc.create_time, nc.update_by, nc.update_time, nc.share, nc.ancestors, nc.dept_id from nav_classify nc
-        left join sys_user u on u.user_id = nc.create_by
-        left join sys_dept d on u.dept_id = d.dept_id
         <where>
             <if test="label != null  and label != ''"> and label = #{label}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
@@ -34,10 +32,10 @@
             <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
             <if test="share != null  and share != ''"> and share = #{share}</if>
             <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
-            <if test="deptId != null "> and dept_id = #{deptId}</if>
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
+            <if test="createBy != null "> and create_by = #{createBy}</if>
         </where>
+        <if test="deptId != null "> or ( dept_id in (#{deptId},100) and share <![CDATA[ < ]]> '3' )</if>
+        order by parent_id , sort
     </select>
 
     <select id="selectNavClassifyById" parameterType="Long" resultMap="NavClassifyResult">

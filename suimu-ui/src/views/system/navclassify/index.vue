@@ -31,9 +31,9 @@
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:navclassify:edit']">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-plus" @click="handleAdd(scope.row)" v-hasPermi="['system:navclassify:add']">新增</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:navclassify:remove']">删除</el-button>
+          <el-button v-show="scope.row.share >= userLevel" size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:navclassify:edit']">修改</el-button>
+          <el-button v-show="scope.row.share >= userLevel" size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:navclassify:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -55,8 +55,10 @@
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" placeholder="请输入排序" />
         </el-form-item>
-        <el-form-item label="是否公开" prop="share">
-          <el-input v-model="form.share" placeholder="请输入是否公开" />
+        <el-form-item label="状态" prop="share">
+          <el-select v-model="form.share" placeholder="状态" clearable style="width: 100%">
+            <el-option v-for="item in navclassifyStatusOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue" />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -88,6 +90,8 @@ export default {
       navclassifyList: [],
       // 分类树选项
       navclassifyOptions: [],
+      // 分类状态
+      navclassifyStatusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -102,6 +106,8 @@ export default {
         ancestors: null,
         deptId: null
       },
+      // 用户等级
+      userLevel: "",
       // 表单参数
       form: {},
       // 表单校验
@@ -120,6 +126,21 @@ export default {
   },
   created() {
     this.getList();
+    let roles = this.$store.getters.roles;
+    roles.forEach(element => {
+      if (element == 'admin') {
+        this.userLevel = 1;
+      } else {
+        if (element == 'captain') {
+          this.userLevel = 2;
+        } else {
+          this.userLevel = 3;
+        }
+      }
+    });
+    this.getDicts("nav_classify_status").then(response => {
+      this.navclassifyStatusOptions = response.data.filter(item => item.dictValue >= this.userLevel);
+    });
   },
   methods: {
     /** 查询分类列表 */

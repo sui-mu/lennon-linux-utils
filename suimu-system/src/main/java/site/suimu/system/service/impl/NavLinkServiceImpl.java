@@ -52,7 +52,6 @@ public class NavLinkServiceImpl implements INavLinkService {
      * @return 链接
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "u")
     public List<NavLink> selectNavLinkList(NavLink navLink) {
         return navLinkMapper.selectNavLinkList(navLink);
     }
@@ -65,6 +64,7 @@ public class NavLinkServiceImpl implements INavLinkService {
      */
     @Override
     public int insertNavLink(NavLink navLink) {
+        int re = 0;
         Long deptId;
         Long userId;
         try {
@@ -77,8 +77,11 @@ public class NavLinkServiceImpl implements INavLinkService {
         navLink.setCreateBy(String.valueOf(userId));
         navLink.setCreateTime(DateUtils.getNowDate());
         navLink.setDeptId(deptId);
-        handleReLation(navLink);
-        return navLinkMapper.insertNavLink(navLink);
+        re = navLinkMapper.insertNavLink(navLink);
+        if (re > 0){
+            handleReLation(navLink);
+        }
+        return re;
     }
 
     private void handleReLation(NavLink navLink) {

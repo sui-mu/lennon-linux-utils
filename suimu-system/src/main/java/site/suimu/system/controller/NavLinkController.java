@@ -16,6 +16,7 @@ import site.suimu.common.annotation.Log;
 import site.suimu.common.core.controller.BaseController;
 import site.suimu.common.core.domain.AjaxResult;
 import site.suimu.common.enums.BusinessType;
+import site.suimu.common.utils.SecurityUtils;
 import site.suimu.system.domain.NavLink;
 import site.suimu.system.service.INavLinkService;
 import site.suimu.common.utils.poi.ExcelUtil;
@@ -41,6 +42,12 @@ public class NavLinkController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(NavLink navLink)
     {
+        Long userId = SecurityUtils.getUserId();
+        if (userId != 1L) {
+            Long deptId = SecurityUtils.getDeptId();
+            navLink.setDeptId(deptId);
+            navLink.setCreateBy(String.valueOf(userId));
+        }
         startPage();
         List<NavLink> list = navLinkService.selectNavLinkList(navLink);
         return getDataTable(list);

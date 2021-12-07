@@ -41,8 +41,6 @@
 
     <select id="selectNavLinkList" parameterType="NavLink" resultMap="NavLinkResult">
         select nl.id, nl.name, nl.intro, nl.icon, nl.link_url, nl.create_by, nl.create_time, nl.update_by, nl.update_time, nl.remark, nl.sort, nl.status ,nl.dept_id from nav_link nl
-        left join sys_user u on u.user_id = nl.create_by
-        left join sys_dept d on u.dept_id = d.dept_id
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="intro != null  and intro != ''"> and intro = #{intro}</if>
@@ -50,10 +48,10 @@
             <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
             <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
+            <if test="createBy != null "> and create_by = #{createBy}</if>
         </where>
-        order by sort, name, intro
+        <if test="deptId != null "> or ( dept_id in (#{deptId}) and status <![CDATA[ < ]]> '3' )</if>
+        order by status, sort, name, intro
     </select>
 
     <select id="selectNavLinkById" parameterType="Long" resultMap="NavLinkResultInfo">
