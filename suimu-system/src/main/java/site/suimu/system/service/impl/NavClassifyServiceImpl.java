@@ -50,7 +50,7 @@ public class NavClassifyServiceImpl implements INavClassifyService {
     @Override
     public List<NavClassify> selectNavClassifyTree(NavClassify navClassify) {
         Long parentId = navClassify.getParentId();
-        if (StringUtils.isNull(parentId)) {
+        if (StringUtils.isNull(parentId)){
             parentId = 0L;
         }
         List<NavClassify> origins = selectNavClassifyList(navClassify);
@@ -65,15 +65,16 @@ public class NavClassifyServiceImpl implements INavClassifyService {
     }
 
     private void findChilds(List<NavClassify> origins, NavClassify current) {
+        if (StringUtils.isEmpty(current.getAncestors())) {
+            current.setAncestors(current.getParentId().toString());
+            updateNavClassify(current);
+        }
+        Long parentId = StringUtils.isNotNull(current.getId()) ? current.getId() : 0L ;
         List<NavClassify> childs = new ArrayList<>();
         for (NavClassify item : origins) {
-            if (StringUtils.isEmpty(current.getAncestors())) {
-                current.setAncestors(current.getParentId().toString());
-                updateNavClassify(item);
-            }
-            if (current.getId().equals(item.getParentId())) {
+            if (parentId.equals(item.getParentId())) {
                 // 处理祖宗辈
-                String ac = current.getAncestors() + "," + current.getId();
+                String ac = current.getAncestors() + "," + parentId;
                 if (!ac.equals(item.getAncestors())) {
                     item.setAncestors(ac);
                     updateNavClassify(item);
@@ -94,6 +95,9 @@ public class NavClassifyServiceImpl implements INavClassifyService {
     public int insertNavClassify(NavClassify navClassify) {
         Long userId = SecurityUtils.getUserId();
         Long deptId = SecurityUtils.getDeptId();
+        if (StringUtils.isNull(navClassify.getParentId())) {
+            navClassify.setParentId(0L);
+        }
         navClassify.setCreateBy(String.valueOf(userId));
         navClassify.setCreateTime(DateUtils.getNowDate());
         navClassify.setDeptId(deptId);

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import site.suimu.common.annotation.Excel;
 import site.suimu.common.core.domain.TreeEntity;
 
+import java.util.List;
+
 /**
  * 分类对象 nav_classify
  *
@@ -37,6 +39,8 @@ public class NavClassify extends TreeEntity
     /** 部门ID */
     @Excel(name = "部门ID")
     private Long deptId;
+
+    private List<NavLink> navLinks;
 
     public void setId(Long id)
     {
@@ -91,6 +95,14 @@ public class NavClassify extends TreeEntity
     public Long getDeptId()
     {
         return deptId;
+    }
+
+    public List<NavLink> getNavLinks() {
+        return navLinks;
+    }
+
+    public void setNavLinks(List<NavLink> navLinks) {
+        this.navLinks = navLinks;
     }
 
     @Override

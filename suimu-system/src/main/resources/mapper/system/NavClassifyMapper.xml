@@ -17,6 +17,7 @@
         <result property="share"    column="share"    />
         <result property="ancestors"    column="ancestors"    />
         <result property="deptId"    column="dept_id"    />
+        <collection property="navLinks" column="{classifyId=id}" select="site.suimu.system.mapper.NavClRelMapper.selectNavLinkList" />
     </resultMap>
 
     <sql id="selectNavClassifyVo">

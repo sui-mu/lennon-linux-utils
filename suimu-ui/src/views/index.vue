@@ -1,22 +1,68 @@
 <template>
   <div class="app-container home">
-    <el-tabs tab-position="left" style="height: 200px;">
-      <el-tab-pane label="用户管理">用户管理</el-tab-pane>
-      <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-      <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
-    </el-tabs>
+    <el-container>
+      <el-header>
+        <div>
+          智能化开发导航
+        </div>
+      </el-header>
+      <el-container>
+        <el-aside width="200px">
+          <div class="left-bar">
+            <div v-for="top in tabs" :key="top.id">
+              <a :href="'#' + top.id" class="active"><i class="iconfont icon-shequ"></i>{{top.label}}</a>
+            </div>
+          </div>
+        </el-aside>
+        <el-main>
+          <div class="main">
+            <div class="box" v-for="top in tabs" :key="top.id">
+              <a href="#" :name="top.id"></a>
+              <el-card>
+                <div slot="header" class="clearfix">
+                  <span>{{top.label}}</span>
+                </div>
+                <div v-show="top.navLinks.length" style="min-height: 200px;">
+                  <div v-for="navlink in top.navLinks" :key="navlink.id">
+                    <a target="_blank" href="navlink.linkUrl">
+                      <div class="item">
+                        <div class="logo"><img :src="navlink.icon" alt="CNDS">{{navlink.name}}</div>
+                        <div class="desc">{{navlink.intro}}</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <el-tabs v-show="!top.navLinks.length" style="min-height: 200px;">
+                  <el-tab-pane v-for="classify in top.children" :key="classify.id" :label="classify.label">
+                    <div v-for="navlink in classify.navLinks" :key="navlink.id">
+                      <a target="_blank" :href="navlink.linkUrl">
+                        <div class="item">
+                          <div class="logo"><img :src="navlink.icon" alt="CNDS">{{navlink.name}}</div>
+                          <div class="desc">{{navlink.intro}}</div>
+                        </div>
+                      </a>
+                    </div>
+                  </el-tab-pane>
+                </el-tabs>
+              </el-card>
+            </div>
+          </div>
 
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
+import { classifyTree } from '@/api/system/navigation/nav.js'
 export default {
   name: "Index",
   data() {
     return {
       // 版本号
       version: "3.7.0",
+      tabs: []
     };
   },
   methods: {
@@ -24,68 +70,92 @@ export default {
       window.open(href, "_blank");
     },
   },
+  mounted() {
+    classifyTree().then(response => {
+      this.tabs = response.data;
+    })
+  }
 };
 </script>
 
 <style scoped lang="scss">
-  .home {
-    blockquote {
-      padding: 10px 20px;
-      margin: 0 0 20px;
-      font-size: 17.5px;
-      border-left: 5px solid #eee;
+  .el-aside {
+    background-color: white;
+    color: #333;
+    // text-align: center;
+  }
+  .top-bar {
+    position: fixed;
+  }
+  .left-bar {
+    position: fixed;
+    // background: #30333c;
+    // color: #6b7386;
+    box-sizing: border-box;
+    flex-direction: column;
+    height: 100vh;
+    display: flex;
+    width: 248px;
+    transition: all 0.5s;
+  }
+  .main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+    // margin-left: 200px;
+    .box {
+      overflow: hidden;
+      margin: 0px 0px 10px 0px;
+      background: #fff;
     }
-    hr {
-      margin-top: 20px;
-      margin-bottom: 20px;
-      border: 0;
-      border-top: 1px solid #eee;
-    }
-    .col-item {
-      margin-bottom: 20px;
-    }
-
-    ul {
-      padding: 0;
-      margin: 0;
-    }
-
-    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    color: #676a6c;
-    overflow-x: hidden;
-
-    ul {
-      list-style-type: none;
-    }
-
-    h4 {
-      margin-top: 0px;
-    }
-
-    h2 {
-      margin-top: 10px;
-      font-size: 26px;
-      font-weight: 100;
-    }
-
-    p {
-      margin-top: 10px;
-
-      b {
-        font-weight: 700;
+    .item {
+      width: 20%;
+      border: 1px solid #e4ecf3;
+      box-shadow: 1px 2px 3px #f2f6f8;
+      border-radius: 6px;
+      background: #fff;
+      padding: 10px;
+      min-width: 200px;
+      margin: 22px 1% 0 0;
+      float: left;
+      overflow: hidden;
+      transition: all 0.3s;
+      &:hover {
+        transform: translateY(-5px);
       }
-    }
-
-    .update-log {
-      ol {
-        display: block;
-        list-style-type: decimal;
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-        margin-inline-start: 0;
-        margin-inline-end: 0;
-        padding-inline-start: 40px;
+      .no-logo {
+        color: #3273dc;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .logo {
+        height: 40px;
+        position: relative;
+        font-size: 14px;
+        font-weight: 700;
+        color: #3273dc;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 0 0.1rem;
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          vertical-align: middle;
+        }
+      }
+      .desc {
+        color: gray;
+        font-size: 12px;
+        padding-top: 10px;
+        height: 35px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
     }
   }

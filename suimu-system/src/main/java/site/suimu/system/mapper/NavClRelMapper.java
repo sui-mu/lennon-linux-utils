@@ -3,6 +3,7 @@ package site.suimu.system.mapper;
 import java.util.List;
 import site.suimu.system.domain.NavClRel;
 import site.suimu.system.domain.NavClassify;
+import site.suimu.system.domain.NavLink;
 
 /**
  * 链接分类关系Mapper接口
@@ -32,6 +33,9 @@ public interface NavClRelMapper
     public List<NavClassify> selectClassifys(NavClRel navClRel);
 
     public List<NavClassify> selectTags(NavClRel navClRel);
+
+
+    public List<NavLink> selectNavLinkList(NavClRel navClRel);
 
 
     /**
