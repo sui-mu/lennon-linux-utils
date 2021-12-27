@@ -6,12 +6,14 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import site.suimu.common.annotation.DataScope;
 import site.suimu.common.utils.DateUtils;
 import site.suimu.common.utils.SecurityUtils;
 import site.suimu.common.utils.StringUtils;
 import site.suimu.system.mapper.NavClassifyMapper;
 import site.suimu.system.domain.NavClassify;
+import site.suimu.system.service.INavClRelService;
 import site.suimu.system.service.INavClassifyService;
 
 /**
@@ -26,6 +28,9 @@ public class NavClassifyServiceImpl implements INavClassifyService {
 
     @Autowired
     private NavClassifyMapper navClassifyMapper;
+
+    @Autowired
+    private INavClRelService navClRelService;
 
     /**
      * 查询分类
@@ -52,16 +57,16 @@ public class NavClassifyServiceImpl implements INavClassifyService {
     @Override
     public List<NavClassify> selectNavClassifyTree(NavClassify navClassify) {
         Long parentId = navClassify.getParentId();
-        if (StringUtils.isNull(parentId)){
+        if (StringUtils.isNull(parentId)) {
             parentId = 0L;
         }
         List<NavClassify> origins = selectNavClassifyList(navClassify);
-        return buildClassifyTree(origins,parentId);
+        return buildClassifyTree(origins, parentId);
     }
 
 
     @Override
-    public List<NavClassify> buildClassifyTree(List<NavClassify> originList,Long parentId) {
+    public List<NavClassify> buildClassifyTree(List<NavClassify> originList, Long parentId) {
         List<NavClassify> tree = new ArrayList<>();
         for (NavClassify item : originList) {
             findChilds(originList, item);
@@ -77,7 +82,7 @@ public class NavClassifyServiceImpl implements INavClassifyService {
             current.setAncestors(current.getParentId().toString());
             updateNavClassify(current);
         }
-        Long parentId = StringUtils.isNotNull(current.getId()) ? current.getId() : 0L ;
+        Long parentId = StringUtils.isNotNull(current.getId()) ? current.getId() : 0L;
         List<NavClassify> childs = new ArrayList<>();
         for (NavClassify item : origins) {
             if (parentId.equals(item.getParentId())) {
@@ -113,7 +118,6 @@ public class NavClassifyServiceImpl implements INavClassifyService {
     }
 
 
-
     /**
      * 修改分类
      *
@@ -138,6 +142,8 @@ public class NavClassifyServiceImpl implements INavClassifyService {
      */
     @Override
     public int deleteNavClassifyByIds(Long[] ids) {
+        int length = navClRelService.selectNavClRelByClassifyIds(ids).size();
+        Assert.isTrue(length == 0,"删除的分类已绑定链接，请先解绑");
         return navClassifyMapper.deleteNavClassifyByIds(ids);
     }
 

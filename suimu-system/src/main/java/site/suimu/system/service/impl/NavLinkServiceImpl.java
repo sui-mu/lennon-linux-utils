@@ -65,14 +65,14 @@ public class NavLinkServiceImpl implements INavLinkService {
     }
 
     private void handleUser(NavLink navLink) {
-        try{
+        try {
             Long userId = SecurityUtils.getUserId();
             if (userId != 1L) {
                 Long deptId = SecurityUtils.getDeptId();
                 navLink.setDeptId(deptId);
                 navLink.setCreateBy(String.valueOf(userId));
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             navLink.setStatus("1");
         }
     }
@@ -99,7 +99,7 @@ public class NavLinkServiceImpl implements INavLinkService {
         navLink.setCreateTime(DateUtils.getNowDate());
         navLink.setDeptId(deptId);
         re = navLinkMapper.insertNavLink(navLink);
-        if (re > 0){
+        if (re > 0) {
             handleReLation(navLink);
         }
         return re;
@@ -130,7 +130,6 @@ public class NavLinkServiceImpl implements INavLinkService {
     }
 
 
-
     /**
      * 修改链接
      *
@@ -159,7 +158,11 @@ public class NavLinkServiceImpl implements INavLinkService {
      */
     @Override
     public int deleteNavLinkByIds(Long[] ids) {
-        return navLinkMapper.deleteNavLinkByIds(ids);
+        int re = navLinkMapper.deleteNavLinkByIds(ids);
+        if (re > 0) {
+            re += iNavClRelService.deleteNavClRelByLinkIds(ids);
+        }
+        return re;
     }
 
     /**

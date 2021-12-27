@@ -76,6 +76,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectNavClRelVo"/>
         where link_id = #{linkId}
     </select>
+
+    <select id="selectNavClRelByClassifyIds" parameterType="Long" resultMap="NavClRelResult">
+        <include refid="selectNavClRelVo"/>
+        where classify_id in
+        <foreach item="classifyId" collection="array" open="(" separator="," close=")">
+            #{classifyId}
+        </foreach>
+    </select>
         
     <insert id="insertNavClRel" parameterType="NavClRel">
         insert into nav_cl_rel

@@ -50,7 +50,7 @@
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="createBy != null "> and create_by = #{createBy}</if>
         </where>
-        <if test="deptId != null "> or ( dept_id in (#{deptId},100) and status <![CDATA[ < ]]> '3' )</if>
+        <if test="deptId != null "> or ( dept_id in (#{deptId}) and status <![CDATA[ < ]]> '3' )</if>
         order by status, sort, name, intro
     </select>
 

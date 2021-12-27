@@ -16,6 +16,7 @@ import site.suimu.system.service.INavClRelService;
 @Service
 public class NavClRelServiceImpl implements INavClRelService 
 {
+
     @Autowired
     private NavClRelMapper navClRelMapper;
 
@@ -29,6 +30,11 @@ public class NavClRelServiceImpl implements INavClRelService
     public NavClRel selectNavClRelByLinkId(Long linkId)
     {
         return navClRelMapper.selectNavClRelByLinkId(linkId);
+    }
+
+    @Override
+    public List<NavClRel> selectNavClRelByClassifyIds(Long[] classifyIds) {
+        return navClRelMapper.selectNavClRelByClassifyIds(classifyIds);
     }
 
     /**

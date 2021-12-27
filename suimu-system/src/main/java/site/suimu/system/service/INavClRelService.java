@@ -19,6 +19,9 @@ public interface INavClRelService
      */
     public NavClRel selectNavClRelByLinkId(Long linkId);
 
+
+    public List<NavClRel> selectNavClRelByClassifyIds(Long[] classifyIds);
+
     /**
      * 查询链接分类关系列表
      * 
