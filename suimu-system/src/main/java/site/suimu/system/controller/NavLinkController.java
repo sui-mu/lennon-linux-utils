@@ -42,12 +42,6 @@ public class NavLinkController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(NavLink navLink)
     {
-        Long userId = SecurityUtils.getUserId();
-        if (userId != 1L) {
-            Long deptId = SecurityUtils.getDeptId();
-            navLink.setDeptId(deptId);
-            navLink.setCreateBy(String.valueOf(userId));
-        }
         startPage();
         List<NavLink> list = navLinkService.selectNavLinkList(navLink);
         return getDataTable(list);

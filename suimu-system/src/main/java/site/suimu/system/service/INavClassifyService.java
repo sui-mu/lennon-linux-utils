@@ -30,6 +30,9 @@ public interface INavClassifyService
 
     public List<NavClassify> selectNavClassifyTree(NavClassify navClassify);
 
+
+    public List<NavClassify> buildClassifyTree(List<NavClassify> originList,Long parentId);
+
     /**
      * 新增分类
      * 

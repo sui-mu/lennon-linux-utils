@@ -1,6 +1,7 @@
 package site.suimu.system.service.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,27 @@ public class NavLinkServiceImpl implements INavLinkService {
      */
     @Override
     public List<NavLink> selectNavLinkList(NavLink navLink) {
+        handleUser(navLink);
         return navLinkMapper.selectNavLinkList(navLink);
+    }
+
+    @Override
+    public Set<Long> selectNavIdSet(NavLink navLink) {
+        handleUser(navLink);
+        return navLinkMapper.selectNavIdSet(navLink);
+    }
+
+    private void handleUser(NavLink navLink) {
+        try{
+            Long userId = SecurityUtils.getUserId();
+            if (userId != 1L) {
+                Long deptId = SecurityUtils.getDeptId();
+                navLink.setDeptId(deptId);
+                navLink.setCreateBy(String.valueOf(userId));
+            }
+        } catch (Exception e){
+            navLink.setStatus("1");
+        }
     }
 
     /**

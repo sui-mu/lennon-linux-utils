@@ -50,8 +50,23 @@
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="createBy != null "> and create_by = #{createBy}</if>
         </where>
-        <if test="deptId != null "> or ( dept_id in (#{deptId}) and status <![CDATA[ < ]]> '3' )</if>
+        <if test="deptId != null "> or ( dept_id in (#{deptId},100) and status <![CDATA[ < ]]> '3' )</if>
         order by status, sort, name, intro
+    </select>
+
+
+    <select id="selectNavIdSet" parameterType="NavLink" resultType="long">
+        select distinct nl.id from nav_link nl
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="intro != null  and intro != ''"> and intro = #{intro}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
+            <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createBy != null "> and create_by = #{createBy}</if>
+        </where>
+        <if test="deptId != null "> or ( dept_id in (#{deptId},100) and status <![CDATA[ < ]]> '3' )</if>
     </select>
 
     <select id="selectNavLinkById" parameterType="Long" resultMap="NavLinkResultInfo">

@@ -1,19 +1,24 @@
 <template>
   <div class="app-wrapper">
     <div class="navigation_sider">
-      <div v-for="top in tabs" :key="top.id">
-        <a :href="'#' + top.id" class="active"><i class="iconfont icon-shequ"></i>{{top.label}}</a>
+      <div class="navigation_sider_title" @click="handleTitleClick">
+        <div>智能化开发导航</div>
+      </div>
+      <div class="navigation_sider_menu">
+        <div v-for="top in tabs" :key="top.id">
+          <div><a :href="'#' + top.id">{{top.label}}</a></div>
+        </div>
       </div>
     </div>
     <div class="navigation_main">
       <div class="navigation_header">
-        智能化开发导航
+        <!-- 智能化开发导航 -->
       </div>
-      <div class="navigation_main">
-        <div class="box" v-for="top in tabs" :key="top.id">
+      <div class="navigation_body">
+        <div class="navigation_box" v-for="top in tabs" :key="top.id">
           <a href="#" :name="top.id"></a>
           <el-card>
-            <div slot="header" class="clearfix">
+            <div slot="header">
               <span>{{top.label}}</span>
             </div>
             <div v-show="top.navLinks.length" style="min-height: 200px;">
@@ -58,8 +63,8 @@ export default {
     };
   },
   methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
+    handleTitleClick() {
+      window.location = "/index";
     },
   },
   mounted() {
@@ -74,6 +79,30 @@ export default {
   @import "~@/assets/styles/mixin.scss";
   @import "~@/assets/styles/variables.scss";
 
+  .navigation_sider {
+    position: fixed;
+    width: #{$base-sidebar-width};
+    background-color: #d7d7d7;
+    .navigation_sider_title {
+      height: 60px;
+    }
+    .navigation_sider_menu {
+      top: 60px;
+      position: fixed;
+      padding: 20px;
+      margin-top: 10px;
+      width: #{$base-sidebar-width};
+      border-radius: 15px;
+    }
+  }
+
+  .navigation_main {
+    min-height: 100%;
+    transition: margin-left 0.28s;
+    margin-left: $base-sidebar-width;
+    position: relative;
+  }
+
   .navigation_header {
     position: fixed;
     top: 0;
@@ -83,23 +112,14 @@ export default {
     transition: width 0.28s;
   }
 
-  .navigation_sider {
-    top: 60px;
-    position: fixed;
-    width: #{$base-sidebar-width};
-    padding: 20px;
-    margin-top: 10px;
-    background-color: #d7d7d7;
-    border-radius: 15px;
-    // position: sticky;
-  }
-
-  .navigation_main {
-    min-height: 100%;
-    transition: margin-left 0.28s;
-    margin-left: $base-sidebar-width;
+  .navigation_body {
     position: relative;
   }
+
+  .navigation_box {
+    margin: 0 0 10px 0;
+  }
+
   .item {
     width: 20%;
     border: 1px solid #e4ecf3;

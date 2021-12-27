@@ -1,6 +1,8 @@
 package site.suimu.system.service;
 
 import java.util.List;
+import java.util.Set;
+
 import site.suimu.system.domain.NavLink;
 
 /**
@@ -26,6 +28,9 @@ public interface INavLinkService
      * @return 链接集合
      */
     public List<NavLink> selectNavLinkList(NavLink navLink);
+
+
+    public Set<Long> selectNavIdSet(NavLink navLink);
 
     /**
      * 新增链接

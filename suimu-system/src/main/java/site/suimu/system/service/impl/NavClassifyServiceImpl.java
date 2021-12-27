@@ -22,6 +22,8 @@ import site.suimu.system.service.INavClassifyService;
  */
 @Service
 public class NavClassifyServiceImpl implements INavClassifyService {
+
+
     @Autowired
     private NavClassifyMapper navClassifyMapper;
 
@@ -54,9 +56,15 @@ public class NavClassifyServiceImpl implements INavClassifyService {
             parentId = 0L;
         }
         List<NavClassify> origins = selectNavClassifyList(navClassify);
+        return buildClassifyTree(origins,parentId);
+    }
+
+
+    @Override
+    public List<NavClassify> buildClassifyTree(List<NavClassify> originList,Long parentId) {
         List<NavClassify> tree = new ArrayList<>();
-        for (NavClassify item : origins) {
-            findChilds(origins, item);
+        for (NavClassify item : originList) {
+            findChilds(originList, item);
             if (Objects.equals(item.getParentId(), parentId)) {
                 tree.add(item);
             }
