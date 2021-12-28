@@ -25,7 +25,14 @@
               <div v-for="navlink in top.navLinks" :key="navlink.id">
                 <a target="_blank" :href="navlink.linkUrl">
                   <div class="item">
-                    <div class="logo"><img :src="navlink.icon" alt="CNDS">{{navlink.name}}</div>
+                    <div class="logo">
+                      <el-image :src="navlink.icon" class="logo-img">
+                        <div slot="error" class="image-slot">
+                          <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
+                        </div>
+                      </el-image>
+                      {{navlink.name}}
+                    </div>
                     <div class="desc">{{navlink.intro}}</div>
                   </div>
                 </a>
@@ -36,7 +43,14 @@
                 <div v-for="navlink in classify.navLinks" :key="navlink.id">
                   <a target="_blank" :href="navlink.linkUrl">
                     <div class="item">
-                      <div class="logo"><img :src="navlink.icon" alt="CNDS">{{navlink.name}}</div>
+                      <div class="logo">
+                        <el-image :src="navlink.icon" class="logo-img">
+                          <div slot="error" class="image-slot">
+                            <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
+                          </div>
+                        </el-image>
+                        {{navlink.name}}
+                      </div>
                       <div class="desc">{{navlink.intro}}</div>
                     </div>
                   </a>
@@ -150,7 +164,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       padding: 0 0.1rem;
-      img {
+      .logo-img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
