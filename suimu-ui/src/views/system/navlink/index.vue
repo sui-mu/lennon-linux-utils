@@ -85,7 +85,11 @@
         <el-form-item label="图标" prop="icon">
           <el-input v-model="form.icon" placeholder="请输入图标">
             <div slot="prepend">
-              <el-image style="width:20px ;height:20px" :src="form.icon"></el-image>
+              <el-image style="width:20px ;height:20px" :src="form.icon">
+                <div slot="error" class="image-slot">
+                  <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
+                </div>
+              </el-image>
             </div>
           </el-input>
         </el-form-item>
