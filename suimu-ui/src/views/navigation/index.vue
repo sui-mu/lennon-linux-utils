@@ -140,7 +140,7 @@ export default {
 
   .navigation_box {
     margin: 0 0 10px 0;
-    padding: 40px 60px 0px 60px;
+    padding: 10px 60px 30px 60px;
   }
 
   .item {
