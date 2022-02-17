@@ -2,11 +2,13 @@
   <div class="app-wrapper">
     <div class="navigation_sider">
       <div class="navigation_sider_title" @click="handleTitleClick">
-        <div>智能化开发导航</div>
+        <h1 style="text-align:center">开发导航</h1>
       </div>
+
       <div class="navigation_sider_menu">
+        <el-divider style="color:white"></el-divider>
         <div v-for="top in tabs" :key="top.id">
-          <div><a :href="'#' + top.id">{{top.label}}</a></div>
+          <li><i class="el-icon-sugar"></i><a :href="'#' + top.id">{{top.label}}</a></li>
         </div>
       </div>
     </div>
@@ -96,17 +98,21 @@ export default {
   .navigation_sider {
     position: fixed;
     width: #{$base-sidebar-width};
-    background-color: #d7d7d7;
+    color: white;
+    background-color: #4d4d4d;
     .navigation_sider_title {
       height: 60px;
     }
     .navigation_sider_menu {
       top: 60px;
+      color: white;
       position: fixed;
       padding: 20px;
       margin-top: 10px;
       width: #{$base-sidebar-width};
       border-radius: 15px;
+      height: 100%;
+      background-color: #4d4d4d;
     }
   }
 
@@ -115,6 +121,8 @@ export default {
     transition: margin-left 0.28s;
     margin-left: $base-sidebar-width;
     position: relative;
+    background-color: #d9d9d9;
+    min-height: 1080px;
   }
 
   .navigation_header {
@@ -132,10 +140,11 @@ export default {
 
   .navigation_box {
     margin: 0 0 10px 0;
+    padding: 40px 60px 0px 60px;
   }
 
   .item {
-    width: 20%;
+    width: 16%;
     border: 1px solid #e4ecf3;
     box-shadow: 1px 2px 3px #f2f6f8;
     border-radius: 6px;
