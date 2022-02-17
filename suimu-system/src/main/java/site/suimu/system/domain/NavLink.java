@@ -49,6 +49,8 @@ public class NavLink extends BaseEntity
     @Excel(name = "部门编码")
     private Long deptId;
 
+    private String classifyId;
+
     private List<NavClassify> classifies = new ArrayList<>();
 
     private List<NavClassify> tags = new ArrayList<>();
@@ -139,6 +141,14 @@ public class NavLink extends BaseEntity
 
     public void setTags(List<NavClassify> tags) {
         this.tags = tags;
+    }
+
+    public String getClassifyId() {
+        return classifyId;
+    }
+
+    public void setClassifyId(String classifyId) {
+        this.classifyId = classifyId;
     }
 
     @Override

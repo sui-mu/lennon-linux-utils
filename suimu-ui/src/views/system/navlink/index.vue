@@ -1,74 +1,88 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="queryParams.name" placeholder="请输入名称" clearable size="small" @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="简介" prop="intro">
-        <el-input v-model="queryParams.intro" placeholder="请输入简介" clearable size="small" @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="图标" prop="icon">
-        <el-input v-model="queryParams.icon" placeholder="请输入图标" clearable size="small" @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input v-model="queryParams.sort" placeholder="请输入排序" clearable size="small" @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="链接状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择链接状态" clearable size="small">
-          <el-option v-for="dict in dict.type.nav_link_status" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row :gutter="20">
+      <!--部门数据-->
+      <el-col :span="4" :xs="24">
+        <div class="head-container">
+          <el-input v-model="classifyLabel" placeholder="请输入分类名称" clearable size="small" prefix-icon="el-icon-search" style="margin-bottom: 20px" />
+        </div>
+        <div class="head-container">
+          <el-tree :data="classifyOptions" :props="defaultProps" :expand-on-click-node="false" :filter-node-method="filterNode" ref="tree" default-expand-all @node-click="handleNodeClick" />
+        </div>
+      </el-col>
+      <!--用户数据-->
+      <el-col :span="20" :xs="24">
+        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="queryParams.name" placeholder="请输入名称" clearable size="small" @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="简介" prop="intro">
+            <el-input v-model="queryParams.intro" placeholder="请输入简介" clearable size="small" @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="图标" prop="icon">
+            <el-input v-model="queryParams.icon" placeholder="请输入图标" clearable size="small" @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="排序" prop="sort">
+            <el-input v-model="queryParams.sort" placeholder="请输入排序" clearable size="small" @keyup.enter.native="handleQuery" />
+          </el-form-item>
+          <el-form-item label="链接状态" prop="status">
+            <el-select v-model="queryParams.status" placeholder="请选择链接状态" clearable size="small">
+              <el-option v-for="dict in dict.type.nav_link_status" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['system:navlink:add']">新增</el-button>
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd" v-hasPermi="['system:navlink:add']">新增</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate" v-hasPermi="['system:navlink:edit']">修改</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:navlink:remove']">删除</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['system:navlink:export']">导出</el-button>
+          </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        </el-row>
+
+        <el-table v-loading="loading" :data="navlinkList" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="编码" align="center" prop="id" />
+          <el-table-column label="图标" align="center" prop="icon">
+            <template slot-scope="scope">
+              <el-image :src="scope.row.icon" fit="none"></el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="名称" align="center" prop="name">
+            <template slot-scope="scope">
+              <el-link :href="scope.row.linkUrl" type="primary" target="_blank">{{scope.row.name}}</el-link>
+            </template>
+          </el-table-column>
+          <el-table-column label="简介" align="center" prop="intro" />
+          <el-table-column label="排序" align="center" prop="sort" />
+          <el-table-column label="链接状态" align="center" prop="status">
+            <template slot-scope="scope">
+              <dict-tag :options="dict.type.nav_link_status" :value="scope.row.status" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:navlink:edit']">修改</el-button>
+              <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:navlink:remove']">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate" v-hasPermi="['system:navlink:edit']">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:navlink:remove']">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" plain icon="el-icon-download" size="mini" @click="handleExport" v-hasPermi="['system:navlink:export']">导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-
-    <el-table v-loading="loading" :data="navlinkList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编码" align="center" prop="id" />
-      <el-table-column label="图标" align="center" prop="icon">
-        <template slot-scope="scope">
-          <el-image :src="scope.row.icon" fit="none"></el-image>
-        </template>
-      </el-table-column>
-      <el-table-column label="名称" align="center" prop="name">
-        <template slot-scope="scope">
-          <el-link :href="scope.row.linkUrl" type="primary" target="_blank">{{scope.row.name}}</el-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="简介" align="center" prop="intro" />
-      <el-table-column label="排序" align="center" prop="sort" />
-      <el-table-column label="链接状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.nav_link_status" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:navlink:edit']">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" v-hasPermi="['system:navlink:remove']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改链接对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -93,15 +107,6 @@
             </div>
           </el-input>
         </el-form-item>
-
-        <!-- <el-form-item label="链接标签" prop="linkUrl">
-          <div>
-            <el-tag :key="index" v-for="(tag,index) in form.tags" closable :disable-transitions="false" @close="handleTagRemove(tag)">
-              {{tag.label}}
-            </el-tag>
-            <el-button class="button-new-tag" size="mini" @click="handleTagAdd">+ 添加</el-button>
-          </div>
-        </el-form-item> -->
         <el-form-item label="分类" prop="classify">
           <treeselect v-model="form.classify" :options="classifyOptions" :show-count="true" placeholder="请选择分类" />
         </el-form-item>
@@ -123,6 +128,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
   </div>
 </template>
 
@@ -154,6 +160,13 @@ export default {
       navlinkList: [],
       // 部门树选项
       classifyOptions: undefined,
+      //
+      classifyLabel: undefined,
+      //
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -199,6 +212,12 @@ export default {
         ],
       }
     };
+  },
+  watch: {
+    // 根据名称筛选部门树
+    classifyLabel(val) {
+      this.$refs.tree.filter(val);
+    }
   },
   created() {
     this.getList();
@@ -257,6 +276,16 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.queryParams.classifyId = data.id;
+      this.getList();
+    },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
@@ -271,6 +300,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.sort = this.total + 1;
       this.open = true;
       this.title = "添加链接";
     },

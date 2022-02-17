@@ -41,7 +41,11 @@
 
     <select id="selectNavLinkList" parameterType="NavLink" resultMap="NavLinkResult">
         select nl.id, nl.name, nl.intro, nl.icon, nl.link_url, nl.create_by, nl.create_time, nl.update_by, nl.update_time, nl.remark, nl.sort, nl.status ,nl.dept_id from nav_link nl
+
         <where>
+            <if test="classifyId != null  and classifyId != ''">
+                id in (select link_id from nav_cl_rel where classify_id = #{classifyId})
+            </if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="intro != null  and intro != ''"> and intro = #{intro}</if>
             <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
@@ -49,8 +53,8 @@
             <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="createBy != null "> and create_by = #{createBy}</if>
+            <if test="deptId != null "> or ( dept_id in (#{deptId}) and status <![CDATA[ < ]]> '3' )</if>
         </where>
-        <if test="deptId != null "> or ( dept_id in (#{deptId}) and status <![CDATA[ < ]]> '3' )</if>
         order by status, sort, name, intro
     </select>
 
@@ -65,8 +69,8 @@
             <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="createBy != null "> and create_by = #{createBy}</if>
+            <if test="deptId != null "> or ( dept_id in (#{deptId},100) and status <![CDATA[ < ]]> '3' )</if>
         </where>
-        <if test="deptId != null "> or ( dept_id in (#{deptId},100) and status <![CDATA[ < ]]> '3' )</if>
     </select>
 
     <select id="selectNavLinkById" parameterType="Long" resultMap="NavLinkResultInfo">
