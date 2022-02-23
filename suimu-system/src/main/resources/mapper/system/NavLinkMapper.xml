@@ -41,21 +41,24 @@
 
     <select id="selectNavLinkList" parameterType="NavLink" resultMap="NavLinkResult">
         select nl.id, nl.name, nl.intro, nl.icon, nl.link_url, nl.create_by, nl.create_time, nl.update_by, nl.update_time, nl.remark, nl.sort, nl.status ,nl.dept_id from nav_link nl
-
+        left join sys_dept d on nl.dept_id = d.dept_id
+        left join sys_user u on nl.create_by = u.user_id
         <where>
-            <if test="classifyId != null  and classifyId != ''">
-                id in (select link_id from nav_cl_rel where classify_id = #{classifyId})
-            </if>
+            nl.status <![CDATA[ < ]]> '3'
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="intro != null  and intro != ''"> and intro = #{intro}</if>
             <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
             <if test="linkUrl != null  and linkUrl != ''"> and link_url = #{linkUrl}</if>
             <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="createBy != null "> and create_by = #{createBy}</if>
-            <if test="deptId != null "> or ( dept_id in (#{deptId}) and status <![CDATA[ < ]]> '3' )</if>
+            <if test="status != null  and status != ''"> and nl.status = #{status}</if>
+            <if test="classifyId != null  and classifyId != ''">
+                and id in (select link_id from nav_cl_rel where classify_id = #{classifyId})
+            </if>
+            <if test="createBy != null "> or (nl.create_by = #{createBy} and nl.status = '3')</if>
         </where>
-        order by status, sort, name, intro
+        order by nl.status, nl.sort, nl.name, nl.intro
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
     </select>
 
 

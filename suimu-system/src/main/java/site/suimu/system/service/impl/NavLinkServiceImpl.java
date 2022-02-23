@@ -53,6 +53,7 @@ public class NavLinkServiceImpl implements INavLinkService {
      * @return 链接
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<NavLink> selectNavLinkList(NavLink navLink) {
         handleUser(navLink);
         return navLinkMapper.selectNavLinkList(navLink);

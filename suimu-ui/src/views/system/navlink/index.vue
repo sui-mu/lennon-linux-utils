@@ -57,7 +57,7 @@
           <el-table-column label="编码" align="center" prop="id" />
           <el-table-column label="图标" align="center" prop="icon">
             <template slot-scope="scope">
-              <el-image :src="scope.row.icon" fit="none"></el-image>
+              <el-image style="width:20%;height:20%" :src="scope.row.icon" fit="fill"></el-image>
             </template>
           </el-table-column>
           <el-table-column label="名称" align="center" prop="name">
@@ -99,10 +99,10 @@
         <el-form-item label="图标" prop="icon">
           <el-input v-model="form.icon" placeholder="请输入图标">
             <div slot="prepend">
-              <el-image style="width:20px ;height:20px" :src="form.icon">
-                <div slot="error" class="image-slot">
+              <el-image style="width:20px ;height:20px" @error="handleImageError" :src="form.icon">
+                <!-- <div slot="error" class="image-slot">
                   <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
-                </div>
+                </div> -->
               </el-image>
             </div>
           </el-input>
@@ -158,7 +158,7 @@ export default {
       total: 0,
       // 链接表格数据
       navlinkList: [],
-      // 部门树选项
+      // 分类树选项
       classifyOptions: undefined,
       //
       classifyLabel: undefined,
@@ -220,6 +220,7 @@ export default {
     }
   },
   created() {
+    this.getTreeselect();
     this.getList();
   },
   methods: {
@@ -231,7 +232,6 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
-      this.getTreeselect();
     },
     /** 查询分类下拉树结构 */
     getTreeselect() {
@@ -370,6 +370,9 @@ export default {
       if (this.form.linkUrl) {
         this.form.icon = this.form.linkUrl.replace(/^(http:\/\/[^\/]+).*$/, '$1') + "/favicon.ico";
       }
+    },
+    handleImageError(error) {
+      this.form.icon = "http://img.duoziwang.com/2021/06/q101801413228587.jpg"
     },
     handleTagAdd() {
 
