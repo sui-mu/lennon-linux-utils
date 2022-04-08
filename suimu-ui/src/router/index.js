@@ -75,15 +75,15 @@ export const constantRoutes = [
     {
         path: '/index',
         component: Layout,
-        // redirect: 'index',
-        children: [
-            {
-                path: 'index',
-                component: (resolve) => require(['@/views/index'], resolve),
-                name: 'Index',
-                meta: { title: '首页', icon: 'dashboard', affix: true }
-            }
-        ]
+        redirect: 'nav/navlink',
+        // children: [
+        //     {
+        //         path: 'index',
+        //         component: (resolve) => require(['@/views/index'], resolve),
+        //         name: 'Index',
+        //         meta: { title: '首页', icon: 'dashboard', affix: true }
+        //     }
+        // ]
     },
     {
         path: '/user',

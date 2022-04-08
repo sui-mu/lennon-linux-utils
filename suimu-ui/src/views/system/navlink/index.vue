@@ -372,7 +372,7 @@ export default {
       }
     },
     handleImageError(error) {
-      this.form.icon = "http://img.duoziwang.com/2021/06/q101801413228587.jpg"
+      //   this.form.icon = "http://img.duoziwang.com/2021/06/q101801413228587.jpg"
     },
     handleTagAdd() {
 

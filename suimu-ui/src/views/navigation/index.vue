@@ -29,9 +29,9 @@
                   <div class="item">
                     <div class="logo">
                       <el-image :src="navlink.icon" class="logo-img">
-                        <div slot="error" class="image-slot">
+                        <!-- <div slot="error" class="image-slot">
                           <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
-                        </div>
+                        </div> -->
                       </el-image>
                       {{navlink.name}}
                     </div>
@@ -46,10 +46,11 @@
                   <a target="_blank" :href="navlink.linkUrl">
                     <div class="item">
                       <div class="logo">
+                        <i class="http://nofeel.design:8888/favicon.ico"></i>
                         <el-image :src="navlink.icon" class="logo-img">
-                          <div slot="error" class="image-slot">
+                          <!-- <div slot="error" class="image-slot">
                             <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
-                          </div>
+                          </div> -->
                         </el-image>
                         {{navlink.name}}
                       </div>
@@ -75,18 +76,36 @@ export default {
     return {
       // 版本号
       version: "3.7.0",
-      tabs: []
+      tabs: [],
+      querys: {}
     };
   },
   methods: {
     handleTitleClick() {
       window.location = "/index";
     },
+    initData() {
+      console.log(this.querys);
+      classifyTree(this.querys).then(response => {
+        this.tabs = response.data;
+      })
+    },
+    getUrl() {
+      var url = window.location.search;
+      //判断是否有参数？
+      if (url.indexOf("?") != -1) {
+        //从第一个字符开始 因为第0个是?号 获取所有除问号的所有符串
+        var str = url.substr(1);
+        //用等号进行分隔 （只有一个参数 所以直接用等号进分隔 如果有多个参数 要用&号分隔 再用等号进行分隔）
+        let strs = str.split("=");
+        this.querys.userKey = strs[1];
+      }
+      this.initData();
+    }
   },
   mounted() {
-    classifyTree().then(response => {
-      this.tabs = response.data;
-    })
+    this.getUrl()
+
   }
 };
 </script>
@@ -94,6 +113,10 @@ export default {
 <style scoped lang="scss">
   @import "~@/assets/styles/mixin.scss";
   @import "~@/assets/styles/variables.scss";
+
+  .el-card__header {
+    border-bottom: 1px solid #e6ebf5;
+  }
 
   .navigation_sider {
     position: fixed;

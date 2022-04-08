@@ -40,6 +40,17 @@ public class NavClassify extends TreeEntity
     @Excel(name = "部门ID")
     private Long deptId;
 
+
+    private String userKey;
+
+    public String getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
+    }
+
     private List<NavLink> navLinks;
 
     public void setId(Long id)
