@@ -20,37 +20,18 @@
         <div class="navigation_box" v-for="top in tabs" :key="top.id">
           <a href="#" :name="top.id"></a>
           <el-card>
-            <div slot="header">
+            <div class="card_header">
               <span>{{top.label}}</span>
             </div>
-            <div v-show="top.navLinks.length" style="min-height: 200px;">
-              <div v-for="navlink in top.navLinks" :key="navlink.id">
-                <a target="_blank" :href="navlink.linkUrl">
-                  <div class="item">
-                    <div class="logo">
-                      <el-image :src="navlink.icon" class="logo-img">
-                        <!-- <div slot="error" class="image-slot">
-                          <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
-                        </div> -->
-                      </el-image>
-                      {{navlink.name}}
-                    </div>
-                    <div class="desc">{{navlink.intro}}</div>
-                  </div>
-                </a>
-              </div>
-            </div>
-            <el-tabs v-show="!top.navLinks.length" style="min-height: 200px;">
-              <el-tab-pane v-for="classify in top.children" :key="classify.id" :label="classify.label">
-                <div v-for="navlink in classify.navLinks" :key="navlink.id">
+            <div class="card_body">
+              <!-- 没有子菜单 -->
+              <div class="notabs_body" v-show="top.navLinks.length" style="min-height: 200px;">
+                <div class="divider"></div>
+                <div v-for="navlink in top.navLinks" :key="navlink.id">
                   <a target="_blank" :href="navlink.linkUrl">
                     <div class="item">
                       <div class="logo">
-                        <i class="http://nofeel.design:8888/favicon.ico"></i>
                         <el-image :src="navlink.icon" class="logo-img">
-                          <!-- <div slot="error" class="image-slot">
-                            <el-image src="http://img.duoziwang.com/2021/06/q101801413228587.jpg" class="logo-img" />
-                          </div> -->
                         </el-image>
                         {{navlink.name}}
                       </div>
@@ -58,8 +39,24 @@
                     </div>
                   </a>
                 </div>
-              </el-tab-pane>
-            </el-tabs>
+              </div>
+              <!-- 有子菜单 -->
+              <el-tabs class="tabs_body" v-show="!top.navLinks.length" style="min-height: 200px;">
+                <el-tab-pane class="panel_body" v-for="classify in top.children" :key="classify.id" :label="classify.label">
+                  <div class="item" v-for="navlink in classify.navLinks" :key="navlink.id">
+                    <a target="_blank" :href="navlink.linkUrl">
+                      <div>
+                        <div class="logo">
+                          <el-image :src="navlink.icon" class="logo-img" />
+                          {{navlink.name}}
+                        </div>
+                        <div class="desc">{{navlink.intro}}</div>
+                      </div>
+                    </a>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
           </el-card>
         </div>
       </div>
@@ -114,10 +111,12 @@ export default {
   @import "~@/assets/styles/mixin.scss";
   @import "~@/assets/styles/variables.scss";
 
-  .el-card__header {
-    border-bottom: 1px solid #e6ebf5;
+  .divider {
+    width: 100%;
+    height: 2px;
+    background-color: #dfe4ed;
+    margin-bottom: 2%;
   }
-
   .navigation_sider {
     position: fixed;
     width: #{$base-sidebar-width};
@@ -162,19 +161,43 @@ export default {
   }
 
   .navigation_box {
-    margin: 0 0 10px 0;
-    padding: 10px 60px 30px 60px;
+    margin: 0%;
+    padding: 1% 1%;
+  }
+
+  .notabs_body {
+    margin: 1% 1%;
+  }
+
+  .tabs_body {
+    margin: 0% 1%;
+  }
+
+  .panel_body {
+    padding: 1% 0%;
+  }
+
+  .card_header {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    font-size: 150%;
+    // text-align: center;
+    padding: 0% 0% 0% 1%;
+  }
+
+  .card_body {
+    padding: 0.5% 0%;
   }
 
   .item {
-    width: 16%;
+    width: 15.6677%;
     border: 1px solid #e4ecf3;
     box-shadow: 1px 2px 3px #f2f6f8;
     border-radius: 6px;
     background: #fff;
     padding: 10px;
-    min-width: 200px;
-    margin: 22px 1% 0 0;
+    min-width: 10%;
+    margin: 0% 1% 1% 0%;
     float: left;
     overflow: hidden;
     transition: all 0.3s;
