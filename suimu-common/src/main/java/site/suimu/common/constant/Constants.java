@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 
 /**
  * 通用常量信息
- * 
+ *
  * @author ruoyi
  */
 public class Constants
@@ -62,17 +62,17 @@ public class Constants
     /**
      * 验证码 redis key
      */
-    public static final String CAPTCHA_CODE_KEY = "suimu:captcha_codes:";
+    public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
 
     /**
      * 登录用户 redis key
      */
-    public static final String LOGIN_TOKEN_KEY = "suimu:login_tokens:";
+    public static final String LOGIN_TOKEN_KEY = "login_tokens:";
 
     /**
      * 防重提交 redis key
      */
-    public static final String REPEAT_SUBMIT_KEY = "suimu:repeat_submit:";
+    public static final String REPEAT_SUBMIT_KEY = "repeat_submit:";
 
     /**
      * 限流 redis key
@@ -97,7 +97,7 @@ public class Constants
     /**
      * 令牌前缀
      */
-    public static final String LOGIN_USER_KEY = "suimu:login_user_key";
+    public static final String LOGIN_USER_KEY = "login_user_key";
 
     /**
      * 用户ID
@@ -127,15 +127,15 @@ public class Constants
     /**
      * 参数管理 cache key
      */
-    public static final String SYS_CONFIG_KEY = "suimu:sys_config:";
+    public static final String SYS_CONFIG_KEY = "sys_config:";
 
     /**
      * 字典管理 cache key
      */
-    public static final String SYS_DICT_KEY = "suimu:sys_dict:";
+    public static final String SYS_DICT_KEY = "sys_dict:";
 
 
-    public static final String NAV_HISTORY_KEY = "suimu:nav:history:";
+    public static final String NAV_HISTORY_KEY = "nav:history:";
 
     /**
      * 资源映射路径 前缀
