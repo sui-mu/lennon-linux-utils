@@ -21,38 +21,46 @@
           <a href="#" :name="top.id"></a>
           <el-card>
             <div class="card_header">
-              <span>{{top.label}}</span>
+              {{top.label}}
             </div>
             <div class="card_body">
               <!-- 没有子菜单 -->
               <div class="notabs_body" v-show="top.navLinks.length" style="min-height: 200px;">
                 <div class="divider"></div>
                 <div v-for="navlink in top.navLinks" :key="navlink.id">
+                  <link-item :linkItem="navlink" />
+                </div>
+                <!-- <div v-for="navlink in top.navLinks" :key="navlink.id">
                   <a target="_blank" :href="navlink.linkUrl">
                     <div class="item">
-                      <div class="logo">
-                        <el-image :src="navlink.icon" class="logo-img">
-                        </el-image>
-                        {{navlink.name}}
-                      </div>
-                      <div class="desc">{{navlink.intro}}</div>
+                      <el-row>
+                        <div class="logo">
+                          <el-col :span="8">
+                            <el-image :src="navlink.icon" class="logo-img" />
+                          </el-col>
+                          <el-col :span="8">
+                            <div>{{navlink.name}}</div>
+                          </el-col>
+                          <el-col :span="8">
+                            <el-tooltip placement="top">
+                              <div slot="content">多行信息<br />第二行信息</div>
+                              <el-button>Top center</el-button>
+                            </el-tooltip>
+                          </el-col>
+                        </div>
+                      </el-row>
+                      <el-row>
+                        <div class="desc">{{navlink.intro}}</div>
+                      </el-row>
                     </div>
                   </a>
-                </div>
+                </div> -->
               </div>
               <!-- 有子菜单 -->
               <el-tabs class="tabs_body" v-show="!top.navLinks.length" style="min-height: 200px;">
                 <el-tab-pane class="panel_body" v-for="classify in top.children" :key="classify.id" :label="classify.label">
-                  <div class="item" v-for="navlink in classify.navLinks" :key="navlink.id">
-                    <a target="_blank" :href="navlink.linkUrl">
-                      <div>
-                        <div class="logo">
-                          <el-image :src="navlink.icon" class="logo-img" />
-                          {{navlink.name}}
-                        </div>
-                        <div class="desc">{{navlink.intro}}</div>
-                      </div>
-                    </a>
+                  <div v-for="navlink in classify.navLinks" :key="navlink.id">
+                    <link-item :linkItem="navlink" />
                   </div>
                 </el-tab-pane>
               </el-tabs>
@@ -66,9 +74,13 @@
 </template>
 
 <script>
+import LinkItem from './linkItem'
 import { classifyTree } from '@/api/system/navigation/nav.js'
 export default {
   name: "Index",
+  components: {
+    LinkItem
+  },
   data() {
     return {
       // 版本号
@@ -180,63 +192,13 @@ export default {
   .card_header {
     font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
       "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-    font-size: 150%;
-    // text-align: center;
+    font-size: 20px;
+    font-weight: bold;
     padding: 0% 0% 0% 1%;
   }
 
   .card_body {
     padding: 0.5% 0%;
-  }
-
-  .item {
-    width: 15.6677%;
-    border: 1px solid #e4ecf3;
-    box-shadow: 1px 2px 3px #f2f6f8;
-    border-radius: 6px;
-    background: #fff;
-    padding: 10px;
-    min-width: 10%;
-    margin: 0% 1% 1% 0%;
-    float: left;
-    overflow: hidden;
-    transition: all 0.3s;
-    &:hover {
-      transform: translateY(-5px);
-    }
-    .no-logo {
-      color: #3273dc;
-      font-weight: bold;
-      font-size: 14px;
-    }
-    .logo {
-      height: 40px;
-      position: relative;
-      font-size: 14px;
-      font-weight: 700;
-      color: #3273dc;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding: 0 0.1rem;
-      .logo-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        vertical-align: middle;
-      }
-    }
-    .desc {
-      color: gray;
-      font-size: 12px;
-      padding-top: 10px;
-      height: 35px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
   }
 </style>
 
