@@ -114,6 +114,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/druid/**").anonymous()
                 .antMatchers("/callback/**").anonymous()
                 .antMatchers("/nologin/**").permitAll()
+                .antMatchers("/websocket/**").permitAll()
+                .antMatchers("/test/**").permitAll()
+//                .antMatchers("/websocket").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()
