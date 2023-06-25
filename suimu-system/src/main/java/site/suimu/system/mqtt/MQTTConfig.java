@@ -66,7 +66,7 @@ public class MQTTConfig {
         options.setServerURIs(new String[]{"tcp://192.168.2.182:1883", "tcp://192.168.2.182:1883"});
         options.setUserName("username");
         options.setPassword("password".toCharArray());
-        options.setMaxInflight(10000);
+        options.setMaxInflight(1000);
         factory.setConnectionOptions(options);
         return factory;
     }
