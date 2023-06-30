@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.suimu.system.mapper.HexagramMapper">
+
+    <resultMap type="Hexagram" id="HexagramResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="info"    column="info"    />
+        <result property="image"    column="image"    />
+        <result property="content"    column="content"    />
+        <result property="shape"    column="shape"    />
+        <result property="tag"    column="tag"    />
+    </resultMap>
+
+    <sql id="selectHexagramVo">
+        select id, name, info, image, content, shape, tag from hexagram
+    </sql>
+
+    <select id="selectHexagramList" parameterType="Hexagram" resultMap="HexagramResult">
+        <include refid="selectHexagramVo"/>
+        <where>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="info != null  and info != ''"> and info like concat('%', #{info}, '%')</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="shape != null  and shape != ''"> and shape = #{shape}</if>
+            <if test="tag != null  and tag != ''"> and tag = #{tag}</if>
+        </where>
+    </select>
+
+    <select id="selectHexagramById" parameterType="String" resultMap="HexagramResult">
+        <include refid="selectHexagramVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHexagram" parameterType="Hexagram">
+        insert into hexagram
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="info != null and info != ''">info,</if>
+            <if test="image != null">image,</if>
+            <if test="content != null">content,</if>
+            <if test="shape != null and shape != ''">shape,</if>
+            <if test="tag != null and tag != ''">tag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="info != null and info != ''">#{info},</if>
+            <if test="image != null">#{image},</if>
+            <if test="content != null">#{content},</if>
+            <if test="shape != null and shape != ''">#{shape},</if>
+            <if test="tag != null and tag != ''">#{tag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHexagram" parameterType="Hexagram">
+        update hexagram
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="info != null and info != ''">info = #{info},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="shape != null and shape != ''">shape = #{shape},</if>
+            <if test="tag != null and tag != ''">tag = #{tag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHexagramById" parameterType="String">
+        delete from hexagram where id = #{id}
+    </delete>
+
+    <delete id="deleteHexagramByIds" parameterType="String">
+        delete from hexagram where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
