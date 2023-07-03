@@ -35,7 +35,7 @@ public class MQTTConfig {
     @Bean
     public MessageProducer inbound() {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter("testClient", mqttClientFactory(),
+                new MqttPahoMessageDrivenChannelAdapter("testClient111", mqttClientFactory(),
                         "topic1", "topic2");
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
@@ -63,7 +63,7 @@ public class MQTTConfig {
     public MqttPahoClientFactory mqttClientFactory() {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setServerURIs(new String[]{"tcp://192.168.2.182:1883", "tcp://192.168.2.182:1883"});
+        options.setServerURIs(new String[]{"tcp://192.168.2.182:1883"});
         options.setUserName("username");
         options.setPassword("password".toCharArray());
         options.setMaxInflight(1000);
@@ -75,7 +75,7 @@ public class MQTTConfig {
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound() {
         MqttPahoMessageHandler messageHandler =
-                new MqttPahoMessageHandler("testClient", mqttClientFactory());
+                new MqttPahoMessageHandler("send-outbound", mqttClientFactory());
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic("testTopic");
         return messageHandler;

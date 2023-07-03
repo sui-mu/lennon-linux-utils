@@ -42,6 +42,7 @@ public class TestMqttController extends BaseController {
         } catch (Exception e) {
             msgList.add(mqttMsg);
             log.error("list Size: {}, msg: {}", msgList.size(), e.getMessage());
+            e.printStackTrace();
             return AjaxResult.error(e.getMessage());
         }
         return AjaxResult.success();
