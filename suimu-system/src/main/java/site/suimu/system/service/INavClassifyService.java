@@ -4,63 +4,57 @@ import java.util.List;
 import site.suimu.system.domain.NavClassify;
 
 /**
- * 分类Service接口
+ * 导航分类Service接口
  * 
- * @author ruoyi
- * @date 2021-11-27
+ * @author lennon
+ * @date 2023-07-18
  */
 public interface INavClassifyService 
 {
     /**
-     * 查询分类
+     * 查询导航分类
      * 
-     * @param id 分类主键
-     * @return 分类
+     * @param id 导航分类主键
+     * @return 导航分类
      */
     public NavClassify selectNavClassifyById(Long id);
 
     /**
-     * 查询分类列表
+     * 查询导航分类列表
      * 
-     * @param navClassify 分类
-     * @return 分类集合
+     * @param navClassify 导航分类
+     * @return 导航分类集合
      */
     public List<NavClassify> selectNavClassifyList(NavClassify navClassify);
 
-
-    public List<NavClassify> selectNavClassifyTree(NavClassify navClassify);
-
-
-    public List<NavClassify> buildClassifyTree(List<NavClassify> originList,Long parentId);
-
     /**
-     * 新增分类
+     * 新增导航分类
      * 
-     * @param navClassify 分类
+     * @param navClassify 导航分类
      * @return 结果
      */
     public int insertNavClassify(NavClassify navClassify);
 
     /**
-     * 修改分类
+     * 修改导航分类
      * 
-     * @param navClassify 分类
+     * @param navClassify 导航分类
      * @return 结果
      */
     public int updateNavClassify(NavClassify navClassify);
 
     /**
-     * 批量删除分类
+     * 批量删除导航分类
      * 
-     * @param ids 需要删除的分类主键集合
+     * @param ids 需要删除的导航分类主键集合
      * @return 结果
      */
     public int deleteNavClassifyByIds(Long[] ids);
 
     /**
-     * 删除分类信息
+     * 删除导航分类信息
      * 
-     * @param id 分类主键
+     * @param id 导航分类主键
      * @return 结果
      */
     public int deleteNavClassifyById(Long id);

@@ -16,29 +16,28 @@ import site.suimu.common.annotation.Log;
 import site.suimu.common.core.controller.BaseController;
 import site.suimu.common.core.domain.AjaxResult;
 import site.suimu.common.enums.BusinessType;
-import site.suimu.common.utils.SecurityUtils;
 import site.suimu.system.domain.NavLink;
 import site.suimu.system.service.INavLinkService;
 import site.suimu.common.utils.poi.ExcelUtil;
 import site.suimu.common.core.page.TableDataInfo;
 
 /**
- * 链接Controller
+ * 导航链接Controller
  * 
- * @author ruoyi
- * @date 2021-11-27
+ * @author lennon
+ * @date 2023-07-18
  */
 @RestController
-@RequestMapping("/system/navlink")
+@RequestMapping("/system/navLink")
 public class NavLinkController extends BaseController
 {
     @Autowired
     private INavLinkService navLinkService;
 
     /**
-     * 查询链接列表
+     * 查询导航链接列表
      */
-    @PreAuthorize("@ss.hasPermi('system:navlink:list')")
+    @PreAuthorize("@ss.hasPermi('system:navLink:list')")
     @GetMapping("/list")
     public TableDataInfo list(NavLink navLink)
     {
@@ -48,22 +47,22 @@ public class NavLinkController extends BaseController
     }
 
     /**
-     * 导出链接列表
+     * 导出导航链接列表
      */
-    @PreAuthorize("@ss.hasPermi('system:navlink:export')")
-    @Log(title = "链接", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('system:navLink:export')")
+    @Log(title = "导航链接", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, NavLink navLink)
     {
         List<NavLink> list = navLinkService.selectNavLinkList(navLink);
         ExcelUtil<NavLink> util = new ExcelUtil<NavLink>(NavLink.class);
-        util.exportExcel(response, list, "链接数据");
+        util.exportExcel(response, list, "导航链接数据");
     }
 
     /**
-     * 获取链接详细信息
+     * 获取导航链接详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:navlink:query')")
+    @PreAuthorize("@ss.hasPermi('system:navLink:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,10 +70,10 @@ public class NavLinkController extends BaseController
     }
 
     /**
-     * 新增链接
+     * 新增导航链接
      */
-    @PreAuthorize("@ss.hasPermi('system:navlink:add')")
-    @Log(title = "链接", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('system:navLink:add')")
+    @Log(title = "导航链接", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody NavLink navLink)
     {
@@ -82,10 +81,10 @@ public class NavLinkController extends BaseController
     }
 
     /**
-     * 修改链接
+     * 修改导航链接
      */
-    @PreAuthorize("@ss.hasPermi('system:navlink:edit')")
-    @Log(title = "链接", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('system:navLink:edit')")
+    @Log(title = "导航链接", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody NavLink navLink)
     {
@@ -93,10 +92,10 @@ public class NavLinkController extends BaseController
     }
 
     /**
-     * 删除链接
+     * 删除导航链接
      */
-    @PreAuthorize("@ss.hasPermi('system:navlink:remove')")
-    @Log(title = "链接", businessType = BusinessType.DELETE)
+    @PreAuthorize("@ss.hasPermi('system:navLink:remove')")
+    @Log(title = "导航链接", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

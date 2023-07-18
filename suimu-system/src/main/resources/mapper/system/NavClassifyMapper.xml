@@ -1,103 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="site.suimu.system.mapper.NavClassifyMapper">
-
+    
     <resultMap type="NavClassify" id="NavClassifyResult">
         <result property="id"    column="id"    />
-        <result property="label"    column="label"    />
-        <result property="parentId"    column="parent_id"    />
-        <result property="type"    column="type"    />
-        <result property="sort"    column="sort"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="share"    column="share"    />
-        <result property="ancestors"    column="ancestors"    />
-        <result property="deptId"    column="dept_id"    />
-        <collection property="navLinks" column="{classifyId=id}" select="site.suimu.system.mapper.NavClRelMapper.selectNavLinkList" />
+        <result property="namespaceId"    column="namespace_id"    />
+        <result property="name"    column="name"    />
+        <result property="icon"    column="icon"    />
+        <result property="sortNum"    column="sort_num"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectNavClassifyVo">
-        select id, label, parent_id, type, sort, create_by, create_time, update_by, update_time, share, ancestors, dept_id from nav_classify
+        select id, namespace_id, name, icon, sort_num, remark from nnav_classify
     </sql>
 
     <select id="selectNavClassifyList" parameterType="NavClassify" resultMap="NavClassifyResult">
-        select nc.id, nc.label, nc.parent_id, nc.type, nc.sort, nc.create_by, nc.create_time, nc.update_by, nc.update_time, nc.share, nc.ancestors, nc.dept_id from nav_classify nc
-        <where>
-            <if test="label != null  and label != ''"> and label = #{label}</if>
-            <if test="parentId != null "> and parent_id = #{parentId}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
-            <if test="share != null  and share != ''"> and share = #{share}</if>
-            <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
-            <if test="createBy != null "> and create_by = #{createBy}</if>
+        <include refid="selectNavClassifyVo"/>
+        <where>  
+            <if test="namespaceId != null "> and namespace_id = #{namespaceId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="sortNum != null "> and sort_num = #{sortNum}</if>
         </where>
-        <if test="deptId != null "> or ( dept_id in (#{deptId},100) and share <![CDATA[ < ]]> '3' )</if>
-        order by parent_id , sort
     </select>
-
+    
     <select id="selectNavClassifyById" parameterType="Long" resultMap="NavClassifyResult">
         <include refid="selectNavClassifyVo"/>
         where id = #{id}
     </select>
-
-    <insert id="insertNavClassify" parameterType="NavClassify" useGeneratedKeys="true" keyProperty="id">
-        insert into nav_classify
+        
+    <insert id="insertNavClassify" parameterType="NavClassify">
+        insert into nnav_classify
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="label != null and label != ''">label,</if>
-            <if test="parentId != null">parent_id,</if>
-            <if test="type != null and type != ''">type,</if>
-            <if test="sort != null and sort != ''">sort,</if>
-            <if test="createBy != null">create_by,</if>
-            <if test="createTime != null">create_time,</if>
-            <if test="updateBy != null">update_by,</if>
-            <if test="updateTime != null">update_time,</if>
-            <if test="share != null">share,</if>
-            <if test="ancestors != null">ancestors,</if>
-            <if test="deptId != null">dept_id,</if>
-        </trim>
+            <if test="id != null">id,</if>
+            <if test="namespaceId != null">namespace_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="icon != null">icon,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="label != null and label != ''">#{label},</if>
-            <if test="parentId != null">#{parentId},</if>
-            <if test="type != null and type != ''">#{type},</if>
-            <if test="sort != null and sort != ''">#{sort},</if>
-            <if test="createBy != null">#{createBy},</if>
-            <if test="createTime != null">#{createTime},</if>
-            <if test="updateBy != null">#{updateBy},</if>
-            <if test="updateTime != null">#{updateTime},</if>
-            <if test="share != null">#{share},</if>
-            <if test="ancestors != null">#{ancestors},</if>
-            <if test="deptId != null">#{deptId},</if>
-        </trim>
+            <if test="id != null">#{id},</if>
+            <if test="namespaceId != null">#{namespaceId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
     </insert>
 
     <update id="updateNavClassify" parameterType="NavClassify">
-        update nav_classify
+        update nnav_classify
         <trim prefix="SET" suffixOverrides=",">
-            <if test="label != null and label != ''">label = #{label},</if>
-            <if test="parentId != null">parent_id = #{parentId},</if>
-            <if test="type != null and type != ''">type = #{type},</if>
-            <if test="sort != null and sort != ''">sort = #{sort},</if>
-            <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
-            <if test="updateBy != null">update_by = #{updateBy},</if>
-            <if test="updateTime != null">update_time = #{updateTime},</if>
-            <if test="share != null">share = #{share},</if>
-            <if test="ancestors != null">ancestors = #{ancestors},</if>
-            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="namespaceId != null">namespace_id = #{namespaceId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="remark != null">remark = #{remark},</if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteNavClassifyById" parameterType="Long">
-        delete from nav_classify where id = #{id}
+        delete from nnav_classify where id = #{id}
     </delete>
 
     <delete id="deleteNavClassifyByIds" parameterType="String">
-        delete from nav_classify where id in
+        delete from nnav_classify where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

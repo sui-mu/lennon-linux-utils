@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.suimu.system.mapper.NavNamespaceMapper">
+    
+    <resultMap type="NavNamespace" id="NavNamespaceResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="key"    column="key"    />
+        <result property="sortNum"    column="sort_num"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectNavNamespaceVo">
+        select id, name, key, sort_num, remark from nnav_namespace
+    </sql>
+
+    <select id="selectNavNamespaceList" parameterType="NavNamespace" resultMap="NavNamespaceResult">
+        <include refid="selectNavNamespaceVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="key != null  and key != ''"> and key = #{key}</if>
+            <if test="sortNum != null "> and sort_num = #{sortNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectNavNamespaceById" parameterType="Long" resultMap="NavNamespaceResult">
+        <include refid="selectNavNamespaceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNavNamespace" parameterType="NavNamespace" useGeneratedKeys="true" keyProperty="id">
+        insert into nnav_namespace
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="key != null and key != ''">key,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="key != null and key != ''">#{key},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNavNamespace" parameterType="NavNamespace">
+        update nnav_namespace
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="key != null and key != ''">key = #{key},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNavNamespaceById" parameterType="Long">
+        delete from nnav_namespace where id = #{id}
+    </delete>
+
+    <delete id="deleteNavNamespaceByIds" parameterType="String">
+        delete from nnav_namespace where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

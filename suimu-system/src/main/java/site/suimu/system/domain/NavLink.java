@@ -5,14 +5,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import site.suimu.common.annotation.Excel;
 import site.suimu.common.core.domain.BaseEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * 链接对象 nav_link
- *
- * @author ruoyi
- * @date 2021-11-27
+ * 导航链接对象 nnav_link
+ * 
+ * @author lennon
+ * @date 2023-07-18
  */
 public class NavLink extends BaseEntity
 {
@@ -21,151 +18,90 @@ public class NavLink extends BaseEntity
     /** 编码 */
     private Long id;
 
+    /** 分类编码 */
+    @Excel(name = "分类编码")
+    private Long classifyId;
+
     /** 名称 */
     @Excel(name = "名称")
     private String name;
-
-    /** 简介 */
-    @Excel(name = "简介")
-    private String intro;
 
     /** 图标 */
     @Excel(name = "图标")
     private String icon;
 
-    /** 链接 */
-    @Excel(name = "链接")
-    private String linkUrl;
-
     /** 排序 */
     @Excel(name = "排序")
-    private String sort;
+    private Long sortNum;
 
-    /** 链接状态 */
-    @Excel(name = "链接状态")
-    private String status;
+    /** 简介 */
+    @Excel(name = "简介")
+    private String intro;
 
-    /** 部门编码 */
-    @Excel(name = "部门编码")
-    private Long deptId;
-
-    private String classifyId;
-
-    private List<NavClassify> classifies = new ArrayList<>();
-
-    private List<NavClassify> tags = new ArrayList<>();
-
-    public void setId(Long id)
+    public void setId(Long id) 
     {
         this.id = id;
     }
 
-    public Long getId()
+    public Long getId() 
     {
         return id;
     }
-    public void setName(String name)
+    public void setClassifyId(Long classifyId) 
+    {
+        this.classifyId = classifyId;
+    }
+
+    public Long getClassifyId() 
+    {
+        return classifyId;
+    }
+    public void setName(String name) 
     {
         this.name = name;
     }
 
-    public String getName()
+    public String getName() 
     {
         return name;
     }
-    public void setIntro(String intro)
-    {
-        this.intro = intro;
-    }
-
-    public String getIntro()
-    {
-        return intro;
-    }
-    public void setIcon(String icon)
+    public void setIcon(String icon) 
     {
         this.icon = icon;
     }
 
-    public String getIcon()
+    public String getIcon() 
     {
         return icon;
     }
-    public void setLinkUrl(String linkUrl)
+    public void setSortNum(Long sortNum) 
     {
-        this.linkUrl = linkUrl;
+        this.sortNum = sortNum;
     }
 
-    public String getLinkUrl()
+    public Long getSortNum() 
     {
-        return linkUrl;
+        return sortNum;
     }
-    public void setSort(String sort)
+    public void setIntro(String intro) 
     {
-        this.sort = sort;
+        this.intro = intro;
     }
 
-    public String getSort()
+    public String getIntro() 
     {
-        return sort;
-    }
-    public void setStatus(String status)
-    {
-        this.status = status;
-    }
-
-    public String getStatus()
-    {
-        return status;
-    }
-
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
-    public List<NavClassify> getClassifies() {
-        return classifies;
-    }
-
-    public void setClassifies(List<NavClassify> classifies) {
-        this.classifies = classifies;
-    }
-
-    public List<NavClassify> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<NavClassify> tags) {
-        this.tags = tags;
-    }
-
-    public String getClassifyId() {
-        return classifyId;
-    }
-
-    public void setClassifyId(String classifyId) {
-        this.classifyId = classifyId;
+        return intro;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("name", getName())
-                .append("intro", getIntro())
-                .append("icon", getIcon())
-                .append("linkUrl", getLinkUrl())
-                .append("createBy", getCreateBy())
-                .append("createTime", getCreateTime())
-                .append("updateBy", getUpdateBy())
-                .append("updateTime", getUpdateTime())
-                .append("remark", getRemark())
-                .append("sort", getSort())
-                .append("status", getStatus())
-                .toString();
+            .append("id", getId())
+            .append("classifyId", getClassifyId())
+            .append("name", getName())
+            .append("icon", getIcon())
+            .append("sortNum", getSortNum())
+            .append("intro", getIntro())
+            .toString();
     }
 }
